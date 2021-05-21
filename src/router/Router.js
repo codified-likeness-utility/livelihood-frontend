@@ -61,14 +61,13 @@ const Router = () => {
 
   // ** Init Error Component
   const Error = lazy(() => import('@src/views/Error'))
-
   /**
    ** Final Route Component Checks for Login & User Role and then redirects to the route
    */
   const FinalRoute = props => {
     const route = props.route
     let action, resource
-
+    
     // ** Assign vars based on route meta
     if (route.meta) {
       action = route.meta.action ? route.meta.action : null

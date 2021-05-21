@@ -25,11 +25,15 @@ const Register = () => {
 
   const { register, errors, handleSubmit, trigger } = useForm()
 
-  const [email, setEmail] = useState('')
+  // const [email, setEmail] = useState('')
   const [valErrors, setValErrors] = useState({})
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [avatar, setAvatar] = useState('')
   const [terms, setTerms] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const illustration = skin === 'dark' ? 'register-v2-dark.svg' : 'register-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
@@ -77,10 +81,31 @@ const Register = () => {
     setValErrors(errs)
   }
 
-  const handleEmailChange = e => {
+  // const handleEmailChange = e => {
+  //   const errs = valErrors
+  //   if (errs.email) delete errs.email
+  //   setEmail(e.target.value)
+  //   setValErrors(errs)
+  // }
+
+  const handleFirstNameChange = e => {
     const errs = valErrors
-    if (errs.email) delete errs.email
-    setEmail(e.target.value)
+    if (errs.firstName) delete errs.firstName
+    setFirstName(e.target.value)
+    setValErrors(errs)
+  }
+
+  const handleLastNameChange = e => {
+    const errs = valErrors
+    if (errs.lastName) delete errs.lastName
+    setLastName(e.target.value)
+    setValErrors(errs)
+  }
+
+  const handleAvatarChange = e => {
+    const errs = valErrors
+    if (errs.avatar) delete errs.avatar
+    setAvatar(e.target.value)
     setValErrors(errs)
   }
 
@@ -146,11 +171,52 @@ const Register = () => {
         <Col className='d-flex align-items-center auth-bg px-2 p-lg-5' lg='4' sm='12'>
           <Col className='px-xl-2 mx-auto' sm='8' md='6' lg='12'>
             <CardTitle tag='h2' className='font-weight-bold mb-1'>
-              Adventure starts here 🚀
+              Growth Hacking your job search starts here 🚀🐱‍💻
             </CardTitle>
-            <CardText className='mb-2'>Make your app management easy and fun!</CardText>
+            <CardText className='mb-2'>Set your job search to AutoPilot and focus on growing your skills as a developer!</CardText>
 
             <Form action='/' className='auth-register-form mt-2' onSubmit={handleSubmit(onSubmit)}>
+
+            <FormGroup>
+                <Label className='form-label' for='register-firstName'>
+                  First Name
+                </Label>
+                <Input
+                  autoFocus
+                  type='text'
+                  value={firstName}
+                  placeholder='Enter your first name here...'
+                  id='register-firstName'
+                  name='register-firstName'
+                  onChange={handleFirstNameChange}
+                  className={classnames({ 'is-invalid': errors['register-firstName'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
+                />
+                {Object.keys(valErrors).length && valErrors.firstName ? (
+                  <small className='text-danger'>{valErrors.firstName}</small>
+                ) : null}
+              </FormGroup>
+
+              <FormGroup>
+                <Label className='form-label' for='register-lastName'>
+                  Last Name
+                </Label>
+                <Input
+                  autoFocus
+                  type='text'
+                  value={lastName}
+                  placeholder='Enter your last name here...'
+                  id='register-lastName'
+                  name='register-lastName'
+                  onChange={handleLastNameChange}
+                  className={classnames({ 'is-invalid': errors['register-lastName'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
+                />
+                {Object.keys(valErrors).length && valErrors.lastName ? (
+                  <small className='text-danger'>{valErrors.lastName}</small>
+                ) : null}
+              </FormGroup>
+
               <FormGroup>
                 <Label className='form-label' for='register-username'>
                   Username
@@ -170,24 +236,7 @@ const Register = () => {
                   <small className='text-danger'>{valErrors.username}</small>
                 ) : null}
               </FormGroup>
-              <FormGroup>
-                <Label className='form-label' for='register-email'>
-                  Email
-                </Label>
-                <Input
-                  type='email'
-                  value={email}
-                  id='register-email'
-                  name='register-email'
-                  onChange={handleEmailChange}
-                  placeholder='john@example.com'
-                  className={classnames({ 'is-invalid': errors['register-email'] })}
-                  innerRef={register({ required: true, validate: value => value !== '' })}
-                />
-                {Object.keys(valErrors).length && valErrors.email ? (
-                  <small className='text-danger'>{valErrors.email}</small>
-                ) : null}
-              </FormGroup>
+              
               <FormGroup>
                 <Label className='form-label' for='register-password'>
                   Password
@@ -202,6 +251,28 @@ const Register = () => {
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
               </FormGroup>
+
+              <FormGroup>
+                <Label className='form-label' for='register-avatar'>
+                  Profile Picture
+                </Label>
+                <Input
+                  autoFocus
+                  type='text'
+                  value={avatar}
+                  placeholder='Please paste link to profile picture...'
+                  id='register-avatar'
+                  name='register-avatar'
+                  onChange={handleAvatarChange}
+                  className={classnames({ 'is-invalid': errors['register-avatar'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
+                />
+                {Object.keys(valErrors).length && valErrors.avatar ? (
+                  <small className='text-danger'>{valErrors.avatar}</small>
+                ) : null}
+              </FormGroup>
+
+
               <FormGroup>
                 <CustomInput
                   type='checkbox'
