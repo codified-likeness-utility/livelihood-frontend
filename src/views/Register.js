@@ -6,7 +6,7 @@ import useJwt from '@src/auth/jwt/useJwt'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { handleLogin } from '@store/actions/auth'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 import { AbilityContext } from '@src/utility/context/Can'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
@@ -25,11 +25,15 @@ const Register = () => {
 
   const { register, errors, handleSubmit, trigger } = useForm()
 
-  const [email, setEmail] = useState('')
+  // const [email, setEmail] = useState('')
   const [valErrors, setValErrors] = useState({})
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [terms, setTerms] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [avatar, setAvatar] = useState('')
+  // const [terms, setTerms] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const illustration = skin === 'dark' ? 'register-v2-dark.svg' : 'register-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
@@ -45,29 +49,31 @@ const Register = () => {
     )
   }
 
-  const onSubmit = () => {
-    if (isObjEmpty(errors)) {
-      useJwt
-        .register({ username, email, password })
-        .then(res => {
-          if (res.data.error) {
-            const arr = {}
-            for (const property in res.data.error) {
-              if (res.data.error[property] !== null) arr[property] = res.data.error[property]
-            }
-            setValErrors(arr)
-            if (res.data.error.email !== null) console.error(res.data.error.email)
-            if (res.data.error.username !== null) console.error(res.data.error.username)
-          } else {
-            setValErrors({})
-            const data = { ...res.data.user, accessToken: res.data.accessToken }
-            ability.update(res.data.user.ability)
-            dispatch(handleLogin(data))
-            history.push('/')
+  const onSubmit = data => {
+    debugger
+    fetch('http://localhost:3000/api/v1/users', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+         accept: 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(newUser => {
+        if (newUser !== undefined) {
+          localStorage.token = newUser.jwt
+          setLoggedIn(true)
+          const newUserData = {
+            firstName: newUser.user.firstName,
+            lastName: newUser.user.lastName,
+            username: newUser.user.username,
+            avatar: newUser.user.avatar
           }
-        })
-        .catch(err => console.log(err))
-    }
+          localStorage.setItem('userData', JSON.stringify(newUserData))
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   const handleUsernameChange = e => {
@@ -77,10 +83,24 @@ const Register = () => {
     setValErrors(errs)
   }
 
-  const handleEmailChange = e => {
+  const handleFirstNameChange = e => {
     const errs = valErrors
-    if (errs.email) delete errs.email
-    setEmail(e.target.value)
+    if (errs.firstName) delete errs.firstName
+    setFirstName(e.target.value)
+    setValErrors(errs)
+  }
+
+  const handleLastNameChange = e => {
+    const errs = valErrors
+    if (errs.lastName) delete errs.lastName
+    setLastName(e.target.value)
+    setValErrors(errs)
+  }
+
+  const handleAvatarChange = e => {
+    const errs = valErrors
+    if (errs.avatar) delete errs.avatar
+    setAvatar(e.target.value)
     setValErrors(errs)
   }
 
@@ -146,13 +166,54 @@ const Register = () => {
         <Col className='d-flex align-items-center auth-bg px-2 p-lg-5' lg='4' sm='12'>
           <Col className='px-xl-2 mx-auto' sm='8' md='6' lg='12'>
             <CardTitle tag='h2' className='font-weight-bold mb-1'>
-              Adventure starts here 🚀
+              Growth Hacking your job search starts here 🚀🐱‍💻
             </CardTitle>
-            <CardText className='mb-2'>Make your app management easy and fun!</CardText>
+            <CardText className='mb-2'>Set your job search to AutoPilot and focus on growing your skills as a developer!</CardText>
 
             <Form action='/' className='auth-register-form mt-2' onSubmit={handleSubmit(onSubmit)}>
+
+            <FormGroup>
+                <Label className='form-label' for='firstName'>
+                  First Name
+                </Label>
+                <Input
+                  autoFocus
+                  type='text'
+                  value={firstName}
+                  placeholder='Enter your first name here...'
+                  id='firstName'
+                  name='firstName'
+                  onChange={handleFirstNameChange}
+                  className={classnames({ 'is-invalid': errors['firstName'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
+                />
+                {Object.keys(valErrors).length && valErrors.firstName ? (
+                  <small className='text-danger'>{valErrors.firstName}</small>
+                ) : null}
+              </FormGroup>
+
               <FormGroup>
-                <Label className='form-label' for='register-username'>
+                <Label className='form-label' for='lastName'>
+                  Last Name
+                </Label>
+                <Input
+                  autoFocus
+                  type='text'
+                  value={lastName}
+                  placeholder='Enter your last name here...'
+                  id='lastName'
+                  name='lastName'
+                  onChange={handleLastNameChange}
+                  className={classnames({ 'is-invalid': errors['lastName'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
+                />
+                {Object.keys(valErrors).length && valErrors.lastName ? (
+                  <small className='text-danger'>{valErrors.lastName}</small>
+                ) : null}
+              </FormGroup>
+
+              <FormGroup>
+                <Label className='form-label' for='username'>
                   Username
                 </Label>
                 <Input
@@ -160,74 +221,68 @@ const Register = () => {
                   type='text'
                   value={username}
                   placeholder='johndoe'
-                  id='register-username'
-                  name='register-username'
+                  id='username'
+                  name='username'
                   onChange={handleUsernameChange}
-                  className={classnames({ 'is-invalid': errors['register-username'] })}
+                  className={classnames({ 'is-invalid': errors['username'] })}
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
                 {Object.keys(valErrors).length && valErrors.username ? (
                   <small className='text-danger'>{valErrors.username}</small>
                 ) : null}
               </FormGroup>
+              
               <FormGroup>
-                <Label className='form-label' for='register-email'>
-                  Email
-                </Label>
-                <Input
-                  type='email'
-                  value={email}
-                  id='register-email'
-                  name='register-email'
-                  onChange={handleEmailChange}
-                  placeholder='john@example.com'
-                  className={classnames({ 'is-invalid': errors['register-email'] })}
-                  innerRef={register({ required: true, validate: value => value !== '' })}
-                />
-                {Object.keys(valErrors).length && valErrors.email ? (
-                  <small className='text-danger'>{valErrors.email}</small>
-                ) : null}
-              </FormGroup>
-              <FormGroup>
-                <Label className='form-label' for='register-password'>
+                <Label className='form-label' for='password'>
                   Password
                 </Label>
                 <InputPasswordToggle
                   value={password}
-                  id='register-password'
-                  name='register-password'
+                  id='password'
+                  name='password'
                   className='input-group-merge'
                   onChange={e => setPassword(e.target.value)}
-                  className={classnames({ 'is-invalid': errors['register-password'] })}
+                  className={classnames({ 'is-invalid': errors['password'] })}
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
               </FormGroup>
+
               <FormGroup>
-                <CustomInput
-                  type='checkbox'
-                  id='terms'
-                  name='terms'
-                  value='terms'
-                  label={<Terms />}
-                  className='custom-control-Primary'
-                  innerRef={register({ required: true })}
-                  onChange={e => setTerms(e.target.checked)}
-                  invalid={errors.terms && true}
+                <Label className='form-label' for='avatar'>
+                  Profile Picture
+                </Label>
+                <Input
+                  autoFocus
+                  type='text'
+                  value={avatar}
+                  placeholder='Please paste link to profile picture...'
+                  id='avatar'
+                  name='avatar'
+                  onChange={handleAvatarChange}
+                  className={classnames({ 'is-invalid': errors['avatar'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
                 />
+                {Object.keys(valErrors).length && valErrors.avatar ? (
+                  <small className='text-danger'>{valErrors.avatar}</small>
+                ) : null}
               </FormGroup>
+
               <Button.Ripple type='submit' block color='primary'>
                 Sign up
               </Button.Ripple>
             </Form>
+
             <p className='text-center mt-2'>
               <span className='mr-25'>Already have an account?</span>
               <Link to='/login'>
                 <span>Sign in instead</span>
               </Link>
             </p>
+
             <div className='divider my-2'>
               <div className='divider-text'>or</div>
             </div>
+
             <div className='auth-footer-btn d-flex justify-content-center'>
               <Button.Ripple color='facebook'>
                 <Facebook size={14} />
@@ -242,9 +297,11 @@ const Register = () => {
                 <GitHub size={14} />
               </Button.Ripple>
             </div>
+
           </Col>
         </Col>
       </Row>
+      { loggedIn === true ? <Redirect to='/home' /> : null }
     </div>
   )
 }
