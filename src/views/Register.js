@@ -1,77 +1,87 @@
-import { useState, useContext, Fragment } from 'react'
+import { Fragment, useState, useContext } from 'react'
+import { isObjEmpty } from '@utils'
 import classnames from 'classnames'
-import Avatar from '@components/avatar'
 import { useSkin } from '@hooks/useSkin'
 import useJwt from '@src/auth/jwt/useJwt'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { toast, Slide } from 'react-toastify'
 import { handleLogin } from '@store/actions/auth'
-import { AbilityContext } from '@src/utility/context/Can'
 import { Link, useHistory } from 'react-router-dom'
+import { AbilityContext } from '@src/utility/context/Can'
 import InputPasswordToggle from '@components/input-password-toggle'
-import { getHomeRouteForLoggedInUser, isObjEmpty } from '@utils'
-import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee } from 'react-feather'
-import {
-  Alert,
-  Row,
-  Col,
-  CardTitle,
-  CardText,
-  Form,
-  Input,
-  FormGroup,
-  Label,
-  CustomInput,
-  Button,
-  UncontrolledTooltip
-} from 'reactstrap'
+import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
+import { Row, Col, CardTitle, CardText, FormGroup, Label, Button, Form, Input, CustomInput } from 'reactstrap'
 
 import '@styles/base/pages/page-auth.scss'
 
-const ToastContent = ({ name, role }) => (
-  <Fragment>
-    <div className='toastify-header'>
-      <div className='title-wrapper'>
-        <Avatar size='sm' color='success' icon={<Coffee size={12} />} />
-        <h6 className='toast-title font-weight-bold'>Welcome, {name}</h6>
-      </div>
-    </div>
-    <div className='toastify-body'>
-      <span>You have successfully logged in as an {role} user to Vuexy. Now you can start to explore. Enjoy!</span>
-    </div>
-  </Fragment>
-)
-
-const Login = props => {
-  const [skin, setSkin] = useSkin()
+const Register = () => {
   const ability = useContext(AbilityContext)
-  const dispatch = useDispatch()
+
+  const [skin, setSkin] = useSkin()
+
   const history = useHistory()
+
+  const dispatch = useDispatch()
+
+  const { register, errors, handleSubmit, trigger } = useForm()
+
+  const [email, setEmail] = useState('')
+  const [valErrors, setValErrors] = useState({})
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [terms, setTerms] = useState(false)
 
-  const { register, errors, handleSubmit } = useForm()
-  const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
+  const illustration = skin === 'dark' ? 'register-v2-dark.svg' : 'register-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
 
-  const onSubmit = data => {
-    debugger
+  const Terms = () => {
+    return (
+      <Fragment>
+        I agree to
+        <a className='ml-25' href='/' onClick={e => e.preventDefault()}>
+          privacy policy & terms
+        </a>
+      </Fragment>
+    )
+  }
+
+  const onSubmit = () => {
     if (isObjEmpty(errors)) {
       useJwt
-        .login({ username, password })
+        .register({ username, email, password })
         .then(res => {
-          const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
-          dispatch(handleLogin(data))
-          ability.update(res.data.userData.ability)
-          history.push(getHomeRouteForLoggedInUser(data.role))
-          toast.success(
-            <ToastContent name={data.fullName || data.username || 'John Doe'} role={data.role || 'admin'} />,
-            { transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
+          if (res.data.error) {
+            const arr = {}
+            for (const property in res.data.error) {
+              if (res.data.error[property] !== null) arr[property] = res.data.error[property]
+            }
+            setValErrors(arr)
+            if (res.data.error.email !== null) console.error(res.data.error.email)
+            if (res.data.error.username !== null) console.error(res.data.error.username)
+          } else {
+            setValErrors({})
+            const data = { ...res.data.user, accessToken: res.data.accessToken }
+            ability.update(res.data.user.ability)
+            dispatch(handleLogin(data))
+            history.push('/')
+          }
         })
         .catch(err => console.log(err))
     }
+  }
+
+  const handleUsernameChange = e => {
+    const errs = valErrors
+    if (errs.username) delete errs.username
+    setUsername(e.target.value)
+    setValErrors(errs)
+  }
+
+  const handleEmailChange = e => {
+    const errs = valErrors
+    if (errs.email) delete errs.email
+    setEmail(e.target.value)
+    setValErrors(errs)
   }
 
   return (
@@ -136,79 +146,83 @@ const Login = props => {
         <Col className='d-flex align-items-center auth-bg px-2 p-lg-5' lg='4' sm='12'>
           <Col className='px-xl-2 mx-auto' sm='8' md='6' lg='12'>
             <CardTitle tag='h2' className='font-weight-bold mb-1'>
-              Welcome to Vuexy! 👋
+              Adventure starts here 🚀
             </CardTitle>
-            <CardText className='mb-2'>Please sign-in to your account and start the adventure</CardText>
-            <Alert color='primary'>
-              <div className='alert-body font-small-2'>
-                <p>
-                  <small className='mr-50'>
-                    <span className='font-weight-bold'>Admin:</span> admin@demo.com | admin
-                  </small>
-                </p>
-                <p>
-                  <small className='mr-50'>
-                    <span className='font-weight-bold'>Client:</span> client@demo.com | client
-                  </small>
-                </p>
-              </div>
-              <HelpCircle
-                id='login-tip'
-                className='position-absolute'
-                size={18}
-                style={{ top: '10px', right: '10px' }}
-              />
-              <UncontrolledTooltip target='login-tip' placement='left'>
-                This is just for ACL demo purpose.
-              </UncontrolledTooltip>
-            </Alert>
-            <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>
+            <CardText className='mb-2'>Make your app management easy and fun!</CardText>
+
+            <Form action='/' className='auth-register-form mt-2' onSubmit={handleSubmit(onSubmit)}>
               <FormGroup>
-                <Label className='form-label' for='login-username'>
+                <Label className='form-label' for='register-username'>
                   Username
                 </Label>
                 <Input
                   autoFocus
-                  type='username'
+                  type='text'
                   value={username}
-                  id='login-username'
-                  name='login-username'
-                  placeholder='e.x. bill_gates123'
-                  onChange={e => setUsername(e.target.value)}
-                  className={classnames({ 'is-invalid': errors['login-username'] })}
+                  placeholder='johndoe'
+                  id='register-username'
+                  name='register-username'
+                  onChange={handleUsernameChange}
+                  className={classnames({ 'is-invalid': errors['register-username'] })}
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
+                {Object.keys(valErrors).length && valErrors.username ? (
+                  <small className='text-danger'>{valErrors.username}</small>
+                ) : null}
               </FormGroup>
               <FormGroup>
-                <div className='d-flex justify-content-between'>
-                  <Label className='form-label' for='login-password'>
-                    Password
-                  </Label>
-                  <Link to='/forgot-password'>
-                    <small>Forgot Password?</small>
-                  </Link>
-                </div>
+                <Label className='form-label' for='register-email'>
+                  Email
+                </Label>
+                <Input
+                  type='email'
+                  value={email}
+                  id='register-email'
+                  name='register-email'
+                  onChange={handleEmailChange}
+                  placeholder='john@example.com'
+                  className={classnames({ 'is-invalid': errors['register-email'] })}
+                  innerRef={register({ required: true, validate: value => value !== '' })}
+                />
+                {Object.keys(valErrors).length && valErrors.email ? (
+                  <small className='text-danger'>{valErrors.email}</small>
+                ) : null}
+              </FormGroup>
+              <FormGroup>
+                <Label className='form-label' for='register-password'>
+                  Password
+                </Label>
                 <InputPasswordToggle
                   value={password}
-                  id='login-password'
-                  name='login-password'
+                  id='register-password'
+                  name='register-password'
                   className='input-group-merge'
                   onChange={e => setPassword(e.target.value)}
-                  className={classnames({ 'is-invalid': errors['login-password'] })}
+                  className={classnames({ 'is-invalid': errors['register-password'] })}
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
               </FormGroup>
               <FormGroup>
-                <CustomInput type='checkbox' className='custom-control-Primary' id='remember-me' label='Remember Me' />
+                <CustomInput
+                  type='checkbox'
+                  id='terms'
+                  name='terms'
+                  value='terms'
+                  label={<Terms />}
+                  className='custom-control-Primary'
+                  innerRef={register({ required: true })}
+                  onChange={e => setTerms(e.target.checked)}
+                  invalid={errors.terms && true}
+                />
               </FormGroup>
-              <Button.Ripple type='submit' color='primary' block>
-                Sign in
+              <Button.Ripple type='submit' block color='primary'>
+                Sign up
               </Button.Ripple>
             </Form>
             <p className='text-center mt-2'>
-              <span className='mr-25'>New on our platform?</span>
-              <Link to='/register'>
-                <span>Create an account</span>
+              <span className='mr-25'>Already have an account?</span>
+              <Link to='/login'>
+                <span>Sign in instead</span>
               </Link>
             </p>
             <div className='divider my-2'>
@@ -235,4 +249,4 @@ const Login = props => {
   )
 }
 
-export default Login
+export default Register
