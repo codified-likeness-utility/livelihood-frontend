@@ -28,7 +28,7 @@ const UserDropdown = () => {
 
   //** ComponentDidMount
   useEffect(() => {
-    if (isUserLoggedIn() !== null) {
+    if (localStorage.getItem('userData') !== null) {
       setUserData(JSON.parse(localStorage.getItem('userData')))
     }
   }, [])

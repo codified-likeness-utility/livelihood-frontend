@@ -25,10 +25,6 @@ export const handleLogin = data => {
 export const handleLogout = () => {
   return dispatch => {
     dispatch({ type: 'LOGOUT', [config.storageTokenKeyName]: null, [config.storageRefreshTokenKeyName]: null })
-
-    // ** Remove user, accessToken & refreshToken from localStorage
-    localStorage.removeItem('userData')
-    localStorage.removeItem(config.storageTokenKeyName)
-    localStorage.removeItem(config.storageRefreshTokenKeyName)
+    localStorage.clear()
   }
 }

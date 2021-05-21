@@ -8,11 +8,10 @@ import { useForm } from 'react-hook-form'
 import { toast, Slide } from 'react-toastify'
 import { handleLogin } from '@store/actions/auth'
 import { AbilityContext } from '@src/utility/context/Can'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { getHomeRouteForLoggedInUser, isObjEmpty } from '@utils'
 import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee } from 'react-feather'
-import { Redirect } from 'react-router-dom'
 
 import {
   Alert,
@@ -31,16 +30,16 @@ import {
 
 import '@styles/base/pages/page-auth.scss'
 
-const ToastContent = ({ name, role }) => (
+const ToastContent = ({username}) => (
   <Fragment>
     <div className='toastify-header'>
       <div className='title-wrapper'>
         <Avatar size='sm' color='success' icon={<Coffee size={12} />} />
-        <h6 className='toast-title font-weight-bold'>Welcome, {name}</h6>
+        <h6 className='toast-title font-weight-bold'>Welcome, {username}</h6>
       </div>
     </div>
     <div className='toastify-body'>
-      <span>You have successfully logged in as an {role} user to Vuexy. Now you can start to explore. Enjoy!</span>
+      <span>You have successfully logged in!. Now you can start to explore. Enjoy!</span>
     </div>
   </Fragment>
 )
@@ -52,6 +51,7 @@ const Login = props => {
   const history = useHistory()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const { register, errors, handleSubmit } = useForm()
   const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
@@ -70,7 +70,18 @@ const Login = props => {
       .then(loggedInUser => {
         if (loggedInUser !== undefined) {
           localStorage.token = loggedInUser.jwt
-          <Redirect to='/home' />
+          setLoggedIn(true)
+          const returningUser = {
+            firstName: loggedInUser.user.firstName,
+            lastName: loggedInUser.user.lastName,
+            username: loggedInUser.user.username,
+            avatar: loggedInUser.user.avatar
+          }
+          localStorage.setItem('userData', JSON.stringify(returningUser))
+          toast.success(
+            <ToastContent username={data.username} />,
+            { transition: Slide, hideProgressBar: true, autoClose: 5000 }
+          )
         }
       })
   }
@@ -232,6 +243,7 @@ const Login = props => {
           </Col>
         </Col>
       </Row>
+      { loggedIn === true ? <Redirect to='/home' /> : null }
     </div>
   )
 }
