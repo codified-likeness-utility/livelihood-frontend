@@ -12,6 +12,8 @@ import { Link, useHistory } from 'react-router-dom'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { getHomeRouteForLoggedInUser, isObjEmpty } from '@utils'
 import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee } from 'react-feather'
+import { Redirect } from 'react-router-dom'
+
 import {
   Alert,
   Row,
@@ -56,22 +58,21 @@ const Login = props => {
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = data => {
-    debugger
-    if (isObjEmpty(errors)) {
-      useJwt
-        .login({ username, password })
-        .then(res => {
-          const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
-          dispatch(handleLogin(data))
-          ability.update(res.data.userData.ability)
-          history.push(getHomeRouteForLoggedInUser(data.role))
-          toast.success(
-            <ToastContent name={data.fullName || data.username || 'John Doe'} role={data.role || 'admin'} />,
-            { transition: Slide, hideProgressBar: true, autoClose: 2000 }
-          )
-        })
-        .catch(err => console.log(err))
-    }
+    fetch('http://localhost:3000/api/v1/login', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+         accept: 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(loggedInUser => {
+        if (loggedInUser !== undefined) {
+          localStorage.token = loggedInUser.jwt
+          <Redirect to='/home' />
+        }
+      })
   }
 
   return (
@@ -164,24 +165,24 @@ const Login = props => {
             </Alert>
             <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>
               <FormGroup>
-                <Label className='form-label' for='login-username'>
+                <Label className='form-label' for='username'>
                   Username
                 </Label>
                 <Input
                   autoFocus
                   type='username'
                   value={username}
-                  id='login-username'
-                  name='login-username'
+                  id='username'
+                  name='username'
                   placeholder='e.x. bill_gates123'
                   onChange={e => setUsername(e.target.value)}
-                  className={classnames({ 'is-invalid': errors['login-username'] })}
+                  className={classnames({ 'is-invalid': errors['username'] })}
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
               </FormGroup>
               <FormGroup>
                 <div className='d-flex justify-content-between'>
-                  <Label className='form-label' for='login-password'>
+                  <Label className='form-label' for='password'>
                     Password
                   </Label>
                   <Link to='/forgot-password'>
@@ -190,11 +191,11 @@ const Login = props => {
                 </div>
                 <InputPasswordToggle
                   value={password}
-                  id='login-password'
-                  name='login-password'
+                  id='password'
+                  name='password'
                   className='input-group-merge'
                   onChange={e => setPassword(e.target.value)}
-                  className={classnames({ 'is-invalid': errors['login-password'] })}
+                  className={classnames({ 'is-invalid': errors['password'] })}
                   innerRef={register({ required: true, validate: value => value !== '' })}
                 />
               </FormGroup>
