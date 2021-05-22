@@ -33,6 +33,14 @@ const Routes = [
     }
   },
   {
+    path: '/form',
+    component: lazy(() => import('../../views/forms/VerticalForm')),
+    layout: 'BlankLayout',
+    // meta: {
+    //   authRoute: true
+    // }
+  },
+  {
     path: '/error',
     component: lazy(() => import('../../views/Error')),
     layout: 'BlankLayout'
