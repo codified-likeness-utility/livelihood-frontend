@@ -1,8 +1,22 @@
+import { Fragment } from 'react'
+import { Row, Col } from 'reactstrap'
+import Breadcrumbs from '@components/breadcrumbs'
 import { Card, CardHeader, CardBody, CardTitle, CardText, CardLink } from 'reactstrap'
+import VerticalForm from './forms/VerticalForm'
 
 const Home = () => {
   return (
     <div>
+
+    <Fragment>
+          <Breadcrumbs breadCrumbTitle='Form Layouts' breadCrumbParent='Form' breadCrumbActive='Form Layouts' />
+          <Row>
+            <Col md='6' sm='12'>
+              <VerticalForm />
+            </Col>
+          </Row>
+        </Fragment>
+
       <Card>
         <CardHeader>
           <CardTitle>Kick start your project 🚀</CardTitle>
@@ -42,6 +56,7 @@ const Home = () => {
           </CardText>
         </CardBody>
       </Card>
+
     </div>
   )
 }

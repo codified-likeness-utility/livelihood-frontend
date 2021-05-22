@@ -1,12 +1,14 @@
-import { useState } from "react";
+require('dotenv').config()
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import classnames from 'classnames'
+import classnames from "classnames";
 
 import {
 	Card,
 	CardHeader,
 	CardTitle,
 	CardBody,
+	CardSubtitle,
 	FormGroup,
 	Row,
 	Col,
@@ -15,84 +17,121 @@ import {
 	Button,
 	Label,
 	CustomInput,
+	Popover,
+	PopoverHeader,
+	PopoverBody,
 } from "reactstrap";
 
 const VerticalForm = () => {
+	const { register, errors, handleSubmit, trigger, reset } = useForm();
 
-  const { register, errors, handleSubmit, trigger } = useForm();
+	const [valErrors, setValErrors] = useState({});
+	const [searchUrl, setSearchUrl] = useState("");
+	const [personalizedMessage, setPersonalizedMessage] = useState("");
+	const [searchPage, setSearchPage] = useState(0);
+	const [numberOfRequests, setNumberOfRequests] = useState(0);
+	const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const [valErrors, setValErrors] = useState({})
-  const [searchUrl, setSearchUrl] = useState('')
-  const [personalizedMessage, setPersonalizedMessage] = useState('')
-  const [searchPage, setSearchPage] = useState('')
-  const [numberOfRequests, setNumberOfRequests] = useState('')
+	const onSubmit = (data) => {
+		const myHeaders = new Headers();
 
-	
+		myHeaders.append(
+			"Authorization",
+			JSON.stringify(process.env.REACT_APP_GH_API_KEY)
+		);
+		myHeaders.append(
+			"Growth-Hacking-Credentials",
+			JSON.stringify(process.env.REACT_APP_GH_API_KEY)
+		);
 
-  const onSubmit = (data) => {
-    reset()
-		debugger
-		// fetch('http://localhost:3000/api/v1/users', {
-		//   method: 'POST',
-		//   headers: {
-		//     'content-type': 'application/json',
-		//      accept: 'application/json'
-		//   },
-		//   body: JSON.stringify(data)
-		// })
-		//   .then(response => response.json())
-		//   .then(newUser => {
-		//     if (newUser !== undefined) {
-		//       localStorage.token = newUser.jwt
-		//       setLoggedIn(true)
-		//       const newUserData = {
-		//         firstName: newUser.user.firstName,
-		//         lastName: newUser.user.lastName,
-		//         username: newUser.user.username,
-		//         avatar: newUser.user.avatar
-		//       }
-		//       localStorage.setItem('userData', JSON.stringify(newUserData))
-		//     }
-		//   })
-		//   .catch(err => console.log(err))
-  };
-  
-  const handleSearchUrlChange = e => {
-    const errs = valErrors
-    if (errs.searchUrl) delete errs.searchUrl
-    setSearchUrl(e.target.value)
-    setValErrors(errs)
-  }
+		myHeaders.append("Content-Type", "application/json")
+			debugger
+		const requestOptions = {
+			method: "POST",
+			headers: myHeaders,
+			body: JSON.stringify({
+				"searchUrl": data.searchUrl,
+				"message": data.message,
+				"page": parseInt(data.page),
+				"maxConnections": parseInt(data.maxConnections)
+			}),
+			redirect: "follow",
+		};
 
-  const handlePersonalizedMessageChange = e => {
-    const errs = valErrors
-    if (errs.personalizedMessage) delete errs.personalizedMessage
-    setPersonalizedMessage(e.target.value)
-    setValErrors(errs)
-  }
+		fetch("https://api.growth-hacking.io/linkedin/search-connect", requestOptions)
+  			.then(response => response.text())
+  			.then(result => console.log(result))
+  			.catch(error => console.log('error', error));
+	};
 
-  const handleSearchPageChange = e => {
-    const errs = valErrors
-    if (errs.searchPage) delete errs.searchPage
-    setSearchPage(e.target.value)
-    setValErrors(errs)
-  }
+	useEffect(async () => {
+		const result = await fetch("./api/formValues.json"); // result: { firstName: 'test', lastName: 'test2' }
+		reset(result); // asynchronously reset your form values
+	}, [reset]);
 
-  const handleNumberOfRequestsChange = e => {
-    const errs = valErrors
-    if (errs.numberOfRequests) delete errs.numberOfRequests
-    setNumberOfRequests(e.target.value)
-    setValErrors(errs)
-  }
+	const handleSearchUrlChange = (e) => {
+		const errs = valErrors;
+		if (errs.searchUrl) delete errs.searchUrl;
+		setSearchUrl(e.target.value);
+		setValErrors(errs);
+	};
+
+	const handlePersonalizedMessageChange = (e) => {
+		const errs = valErrors;
+		if (errs.personalizedMessage) delete errs.personalizedMessage;
+		setPersonalizedMessage(e.target.value);
+		setValErrors(errs);
+	};
+
+	const handleSearchPageChange = (e) => {
+		const errs = valErrors;
+		if (errs.searchPage) delete errs.searchPage;
+		setSearchPage(e.target.value);
+		setValErrors(errs);
+	};
+
+	const handleNumberOfRequestsChange = (e) => {
+		const errs = valErrors;
+		if (errs.numberOfRequests) delete errs.numberOfRequests;
+		setNumberOfRequests(e.target.value);
+		setValErrors(errs);
+	};
 
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle tag='h4'>Vertical Form</CardTitle>
+				<CardTitle tag='h4'>
+					Search & Connect with LinkedIn Members
+				</CardTitle>
+				<br></br>
+				<br></br>
+				<Button.Ripple color='primary' outline id='controlledPopover'>
+					Directions
+				</Button.Ripple>
+				<Popover
+					placement='right'
+					target='controlledPopover'
+					isOpen={popoverOpen}
+					toggle={() => setPopoverOpen(!popoverOpen)}
+				>
+					<PopoverHeader>How to get started</PopoverHeader>
+					<PopoverBody>
+						Create a new search from
+						<a href='www.linkedin.com/search'>
+							{" "}
+							www.linkedin.com/search
+						</a>{" "}
+						by entering the title of the type of person you would
+						like to connect with and applying any necessary filters.
+						Once you have applied your filters, copy and paste the
+						link from your browser into the LinkedIn Search URL
+						field.
+					</PopoverBody>
+				</Popover>
 			</CardHeader>
 
 			<CardBody>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+				<Form onSubmit={handleSubmit(onSubmit)}>
 					<Row>
 						<Col sm='12'>
 							<FormGroup>
@@ -100,57 +139,85 @@ const VerticalForm = () => {
 									LinkedIn Search URL
 								</Label>
 								<Input
-                  type='text'
-                  value={searchUrl}
+									type='text'
+									value={searchUrl}
 									name='searchUrl'
 									id='searchUrl'
-                  placeholder='Perform search on LinkedIn and paste URL here...'
-                  onChange={handleSearchUrlChange}
-                  className={classnames({ 'is-invalid': errors['searchUrl'] })}
-                  innerRef={register({ required: true, validate: value => value !== '' })}
-                />
-                {Object.keys(valErrors).length && valErrors.searchUrl ? (
-                  <small className='text-danger'>{valErrors.searchUrl}</small>
-                ) : null}
+									placeholder='Perform search on LinkedIn and paste URL here...'
+									onChange={handleSearchUrlChange}
+									className={classnames({
+										"is-invalid": errors["searchUrl"],
+									})}
+									innerRef={register({
+										required: true,
+										validate: (value) => value !== "",
+									})}
+								/>
+								{Object.keys(valErrors).length &&
+								valErrors.searchUrl ? (
+									<small className='text-danger'>
+										{valErrors.searchUrl}
+									</small>
+								) : null}
 							</FormGroup>
 						</Col>
 						<Col sm='12'>
 							<FormGroup>
-								<Label className='form-label' for='personalizedMessage'>
+								<Label
+									className='form-label'
+									for='personalizedMessage'
+								>
 									Personalized Message - replace their name
 									with $firstName
 								</Label>
 								<Input
-                  type='text'
-                  value={personalizedMessage}
-									name='personalizedMessage'
+									type='textarea'
+									value={personalizedMessage}
+									name='message'
 									id='personalizedMessage'
-                  placeholder='e.x. Hey $firstName, I thought we might like to connect!'
-                  onChange={handlePersonalizedMessageChange}
-                  className={classnames({ 'is-invalid': errors['personalizedMessage'] })}
-                  innerRef={register({ required: true, validate: value => value !== '' })}
-                />
-                {Object.keys(valErrors).length && valErrors.personalizedMessage ? (
-                  <small className='text-danger'>{valErrors.personalizedMessage}</small>
-                ) : null}
+									placeholder='e.x. Hey $firstName, I thought we might like to connect!'
+									onChange={handlePersonalizedMessageChange}
+									className={classnames({
+										"is-invalid":
+											errors["personalizedMessage"],
+									})}
+									innerRef={register({
+										required: true,
+										validate: (value) => value !== "",
+									})}
+								/>
+								{Object.keys(valErrors).length &&
+								valErrors.personalizedMessage ? (
+									<small className='text-danger'>
+										{valErrors.personalizedMessage}
+									</small>
+								) : null}
 							</FormGroup>
 						</Col>
 						<Col sm='12'>
 							<FormGroup>
 								<Label for='searchPage'>Search Page #</Label>
 								<Input
-                  type='number'
-                  value={searchPage}
-									name='searchPage'
+									type='number'
+									value={parseInt(searchPage)}
+									name='page'
 									id='searchPage'
-                  placeholder='The page of the search results you would like to start from...'
-                  onChange={handleSearchPageChange}
-                  className={classnames({ 'is-invalid': errors['searchPage'] })}
-                  innerRef={register({ required: true, validate: value => value !== '' })}
-                />
-                {Object.keys(valErrors).length && valErrors.searchPage ? (
-                  <small className='text-danger'>{valErrors.searchPage}</small>
-                ) : null}
+									placeholder='The page of the search results you would like to start from...'
+									onChange={handleSearchPageChange}
+									className={classnames({
+										"is-invalid": errors["searchPage"],
+									})}
+									innerRef={register({
+										required: true,
+										validate: (value) => value !== "",
+									})}
+								/>
+								{Object.keys(valErrors).length &&
+								valErrors.searchPage ? (
+									<small className='text-danger'>
+										{valErrors.searchPage}
+									</small>
+								) : null}
 							</FormGroup>
 						</Col>
 						<Col sm='12'>
@@ -159,28 +226,27 @@ const VerticalForm = () => {
 									Number of Requests to Send
 								</Label>
 								<Input
-                  type='number'
-                  value={numberOfRequests}
-									name='numberOfRequests'
+									type='number'
+									value={parseInt(numberOfRequests)}
+									name='maxConnections'
 									id='numberOfRequests'
-                  placeholder='Maximum number of connection requests to send...'
-                  onChange={handleNumberOfRequestsChange}
-                  className={classnames({ 'is-invalid': errors['numberOfRequests'] })}
-                  innerRef={register({ required: true, validate: value => value !== '' })}
-                />
-                {Object.keys(valErrors).length && valErrors.numberOfRequests ? (
-                  <small className='text-danger'>{valErrors.numberOfRequests}</small>
-                ) : null}
-							</FormGroup>
-						</Col>
-						<Col sm='12'>
-							<FormGroup>
-								<CustomInput
-									type='checkbox'
-									id='remember-me-vertical'
-									label='Remember Me'
-									defaultChecked={false}
+									placeholder='Maximum number of connection requests to send...'
+									onChange={handleNumberOfRequestsChange}
+									className={classnames({
+										"is-invalid":
+											errors["numberOfRequests"],
+									})}
+									innerRef={register({
+										required: true,
+										validate: (value) => value !== "",
+									})}
 								/>
+								{Object.keys(valErrors).length &&
+								valErrors.numberOfRequests ? (
+									<small className='text-danger'>
+										{valErrors.numberOfRequests}
+									</small>
+								) : null}
 							</FormGroup>
 						</Col>
 						<Col sm='12'>
@@ -189,14 +255,16 @@ const VerticalForm = () => {
 									className='mr-1'
 									color='primary'
 									type='submit'
-									onClick={(e) => console.log('form submitted!')}
+									onClick={(e) =>
+										console.log("form submitted!")
+									}
 								>
 									Submit
 								</Button.Ripple>
 								<Button.Ripple
 									outline
 									color='secondary'
-                  type='reset'
+									type='reset'
 								>
 									Reset
 								</Button.Ripple>
