@@ -25,5 +25,5 @@ yarn-error.log*
 .docz
 .eslintcache
 .vscode
-
+.env
 /react-shell-scripts
