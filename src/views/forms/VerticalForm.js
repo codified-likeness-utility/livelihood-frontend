@@ -1,4 +1,3 @@
-require('dotenv').config()
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import classnames from "classnames";
@@ -33,19 +32,22 @@ const VerticalForm = () => {
 	const [popoverOpen, setPopoverOpen] = useState(false);
 
 	const onSubmit = (data) => {
+		const apiKey = process.env.REACT_APP_GH_API_KEY
+		const account = process.env.REACT_APP_GH_ACCOUNT
+
 		const myHeaders = new Headers();
 
 		myHeaders.append(
 			"Authorization",
-			JSON.stringify(process.env.REACT_APP_GH_API_KEY)
+			apiKey
 		);
 		myHeaders.append(
 			"Growth-Hacking-Credentials",
-			JSON.stringify(process.env.REACT_APP_GH_API_KEY)
+			account
 		);
-
-		myHeaders.append("Content-Type", "application/json")
 			debugger
+		// myHeaders.append("Content-Type", "application/json")
+			
 		const requestOptions = {
 			method: "POST",
 			headers: myHeaders,
@@ -59,7 +61,7 @@ const VerticalForm = () => {
 		};
 
 		fetch("https://api.growth-hacking.io/linkedin/search-connect", requestOptions)
-  			.then(response => response.text())
+			.then(response => response.json())
   			.then(result => console.log(result))
   			.catch(error => console.log('error', error));
 	};
