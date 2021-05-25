@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import classnames from "classnames";
-
+import CreateAssociate from '../CreateAssociate'
 import {
 	Card,
 	CardHeader,
@@ -45,7 +45,6 @@ const VerticalForm = () => {
 			"Growth-Hacking-Credentials",
 			account
 		);
-			debugger
 		// myHeaders.append("Content-Type", "application/json")
 			
 		const requestOptions = {
@@ -62,8 +61,11 @@ const VerticalForm = () => {
 
 		fetch("https://api.growth-hacking.io/linkedin/search-connect", requestOptions)
 			.then(response => response.json())
-  			.then(result => console.log(result))
-  			.catch(error => console.log('error', error));
+			.then(result => {
+				console.log(result)
+				CreateAssociate(result.result)
+			})
+			.catch(error => console.log('error', error));
 	};
 
 	useEffect(async () => {
@@ -119,7 +121,7 @@ const VerticalForm = () => {
 					<PopoverHeader>How to get started</PopoverHeader>
 					<PopoverBody>
 						Create a new search from
-						<a href='www.linkedin.com/search'>
+						<a href='https://www.linkedin.com/search'>
 							{" "}
 							www.linkedin.com/search
 						</a>{" "}

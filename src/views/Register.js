@@ -11,7 +11,7 @@ import { AbilityContext } from '@src/utility/context/Can'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
 import { Row, Col, CardTitle, CardText, FormGroup, Label, Button, Form, Input, CustomInput } from 'reactstrap'
-
+import CreateLinkedinNetwork from './CreateLinkedinNetwork'
 import '@styles/base/pages/page-auth.scss'
 
 const Register = () => {
@@ -70,6 +70,7 @@ const Register = () => {
             avatar: newUser.user.avatar
           }
           localStorage.setItem('userData', JSON.stringify(newUserData))
+          CreateLinkedinNetwork()
         }
       })
       .catch(err => console.log(err))
@@ -155,7 +156,7 @@ const Register = () => {
               </g>
             </g>
           </svg>
-          <h2 className='brand-text text-primary ml-1'>Vuexy</h2>
+          <h2 className='brand-text text-primary ml-1'>livelihood</h2>
         </Link>
         <Col className='d-none d-lg-flex align-items-center p-5' lg='8' sm='12'>
           <div className='w-100 d-lg-flex align-items-center justify-content-center px-5'>

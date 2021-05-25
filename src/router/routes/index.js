@@ -1,7 +1,7 @@
 import { lazy } from 'react'
 
 // ** Document title
-const TemplateTitle = '%s - Vuexy React Admin Template'
+const TemplateTitle = '%s - livelihood'
 
 // ** Default Route
 const DefaultRoute = '/login'
@@ -13,7 +13,7 @@ const Routes = [
     component: lazy(() => import('../../views/Home'))
   },
   {
-    path: '/second-page',
+    path: '/statistics',
     component: lazy(() => import('../../views/SecondPage'))
   },
   {
