@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 // ** Third Party Components
 import Flatpickr from 'react-flatpickr'
-import { User, Briefcase, Mail, Calendar, DollarSign, X } from 'react-feather'
+import { User, Briefcase, Mail, Calendar, DollarSign, X, Linkedin, Zap, Type } from 'react-feather'
 import {
   Button,
   Modal,
@@ -36,54 +36,59 @@ const AddNewModal = ({ open, handleModal }) => {
       contentClassName='pt-0'
     >
       <ModalHeader className='mb-3' toggle={handleModal} close={CloseBtn} tag='div'>
-        <h5 className='modal-title'>New Record</h5>
+        <h5 className='modal-title'>New Application Entry</h5>
       </ModalHeader>
       <ModalBody className='flex-grow-1'>
-        <FormGroup>
-          <Label for='full-name'>Full Name</Label>
-          <InputGroup>
-            <InputGroupAddon addonType='prepend'>
-              <InputGroupText>
-                <User size={15} />
-              </InputGroupText>
-            </InputGroupAddon>
-            <Input id='full-name' placeholder='Bruce Wayne' />
-          </InputGroup>
-        </FormGroup>
-        <FormGroup>
-          <Label for='post'>Post</Label>
+
+      <FormGroup>
+          <Label for='title'>Job Title</Label>
           <InputGroup>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>
                 <Briefcase size={15} />
               </InputGroupText>
             </InputGroupAddon>
-            <Input id='post' placeholder='Web Developer' />
+            <Input id='title' placeholder='Web Developer' />
           </InputGroup>
         </FormGroup>
+
         <FormGroup>
-          <Label for='email'>Email</Label>
+          <Label for='company-name'>Company Name</Label>
           <InputGroup>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>
-                <Mail size={15} />
+                <Zap size={15} />
               </InputGroupText>
             </InputGroupAddon>
-            <Input type='email' id='email' placeholder='brucewayne@email.com' />
+            <Input id='company-name' placeholder='Wayne Enterprise' />
           </InputGroup>
         </FormGroup>
+        
         <FormGroup>
-          <Label for='joining-date'>Joining Date</Label>
+          <Label for='poster'>Job Post Url</Label>
+          <InputGroup>
+            <InputGroupAddon addonType='prepend'>
+              <InputGroupText>
+                <Linkedin size={15} />
+              </InputGroupText>
+            </InputGroupAddon>
+            <Input type='text' id='poster' placeholder='www.linkedin.com/bruce-wayne' />
+          </InputGroup>
+        </FormGroup>
+
+        <FormGroup>
+          <Label for='applied-date'>Date Applied</Label>
           <InputGroup>
             <InputGroupAddon addonType='prepend'>
               <InputGroupText>
                 <Calendar size={15} />
               </InputGroupText>
             </InputGroupAddon>
-            <Flatpickr className='form-control' id='joining-date' value={Picker} onChange={date => setPicker(date)} />
+            <Flatpickr className='form-control' id='applied-date' value={Picker} onChange={date => setPicker(date)} />
           </InputGroup>
         </FormGroup>
-        <FormGroup className='mb-4'>
+
+        <FormGroup >
           <Label for='salary'>Salary</Label>
           <InputGroup>
             <InputGroupAddon addonType='prepend'>
@@ -94,6 +99,19 @@ const AddNewModal = ({ open, handleModal }) => {
             <Input type='number' id='salary' />
           </InputGroup>
         </FormGroup>
+
+        <FormGroup className='mb-4'>
+          <Label for='description'>Description</Label>
+          <InputGroup>
+            <InputGroupAddon addonType='prepend'>
+              <InputGroupText>
+                <Type size={15} />
+              </InputGroupText>
+            </InputGroupAddon>
+            <Input type='textarea' id='description' />
+          </InputGroup>
+        </FormGroup>
+
         <Button className='mr-1' color='primary' onClick={handleModal}>
           Submit
         </Button>

@@ -124,7 +124,7 @@ const DataTableWithButtons = () => {
     <Fragment>
       <Card>
         <CardHeader className='flex-md-row flex-column align-md-items-center align-items-start border-bottom'>
-          <CardTitle tag='h4'>LinkedIn Connections</CardTitle>
+          <CardTitle tag='h4'>Job Applications Tracker</CardTitle>
           <div className='d-flex mt-md-0 mt-1'>
             <Button className='ml-2' color='primary' onClick={handleModal}>
               <Plus size={15} />
