@@ -20,9 +20,21 @@ const status = {
 export let data
 
 // ** Get initial Data
-axios.get('/api/datatables/initial-data').then(response => {
-  data = response.data
-})
+// fetch('http://localhost:3000/api/v1/associates', {
+//   method: 'GET',
+//   headers: {
+//     "content-type": "application/json",
+//     "accept": "application/json",
+//     "authorization": `Bearer ${localStorage.token}`,
+//   },
+// })
+//   .then(response => response.json())
+//   .then(associateData => {
+//     associateData.map(associate => {
+//       data = associate
+//     })
+//   })
+
 
 // ** Table Zero Config Column
 export const basicColumns = [
@@ -69,7 +81,7 @@ const ExpandableTable = ({ data }) => {
   return (
     <div className='expandable-content p-2'>
       <p>
-        <span className='font-weight-bold'>City:</span> {data.city}
+        <span className='font-weight-bold'>Email:</span> {data.email}
       </p>
       <p>
         <span className='font-weight-bold'>Experience:</span> {data.experience}

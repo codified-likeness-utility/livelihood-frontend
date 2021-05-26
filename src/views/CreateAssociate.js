@@ -15,7 +15,7 @@ const CreateAssociate = result => {
                 firstName: res.firstName.replace(/\W/g, ''),
                 lastName:  res.lastName.replace(/\W/g, ''),
                 title: res.description,
-                profileUrl: res.profileImageUrl,
+                profileUrl: res.profileUrl,
                 connectionDegree: res.connectionDegree.replace(/\W/g, ''),
                 linkedinPremium: res.isPremium,
                 message1: res.message,

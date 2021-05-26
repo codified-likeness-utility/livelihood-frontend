@@ -1,16 +1,16 @@
 // ** React Imports
-import { Fragment, useState, forwardRef } from 'react'
+import { Fragment, useState, useEffect, forwardRef } from 'react'
 
 // ** Table Data & Columns
-import { data, columns } from '../data'
-
+// import { data, columns } from '../data'
+import Avatar from '@components/avatar'
 // ** Add New Modal Component
 import AddNewModal from './AddNewModal'
 
 // ** Third Party Components
 import ReactPaginate from 'react-paginate'
 import DataTable from 'react-data-table-component'
-import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus } from 'react-feather'
+import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus, MoreVertical, Archive, Trash, Edit } from 'react-feather'
 import {
   Card,
   CardHeader,
@@ -23,7 +23,9 @@ import {
   Input,
   Label,
   Row,
-  Col
+  Col,
+  UncontrolledDropdown,
+  Badge
 } from 'reactstrap'
 
 // ** Bootstrap Checkbox Component
@@ -40,6 +42,118 @@ const DataTableWithButtons = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [filteredData, setFilteredData] = useState([])
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    loadData();
+  }, [])
+
+// ** Get initial Data
+  const loadData = async () => {
+    fetch('http://localhost:3000/api/v1/associates', {
+      method: 'GET',
+      headers: {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": `Bearer ${localStorage.token}`,
+      },
+    })
+      .then(response => response.json())
+      .then(associateData => {
+        setData(associateData)
+      })
+}
+  
+
+const columns = [
+  {
+    name: 'Name',
+    selector: 'fullName',
+    sortable: true,
+    minWidth: '250px',
+    cell: row => (
+      <div className='d-flex align-items-center'>
+        {/* {row.avatar === '' ? (
+          <Avatar color={`light-${states[row.status]}`} content={row.full_name} initials />
+        ) : (
+          <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
+        )} */}
+        <div className='user-info text-truncate ml-1'>
+          <span className='d-block font-weight-bold text-truncate'>{row.fullName}</span>
+          <small>{row.post}</small>
+        </div>
+      </div>
+    )
+  },
+  {
+    name: 'Email',
+    selector: 'email',
+    sortable: true,
+    minWidth: '250px'
+  },
+  {
+    name: 'Date',
+    selector: 'start_date',
+    sortable: true,
+    minWidth: '150px'
+  },
+
+  {
+    name: 'Salary',
+    selector: 'salary',
+    sortable: true,
+    minWidth: '150px'
+  },
+  {
+    name: 'Age',
+    selector: 'age',
+    sortable: true,
+    minWidth: '100px'
+  },
+  // {
+  //   name: 'Status',
+  //   selector: 'status',
+  //   sortable: true,
+  //   minWidth: '150px',
+  //   cell: row => {
+  //     return (
+  //       <Badge color={status[row.status].color} pill>
+  //         {status[row.status].title}
+  //       </Badge>
+  //     )
+  //   }
+  // },
+  {
+    name: 'Actions',
+    allowOverflow: true,
+    cell: row => {
+      return (
+        <div className='d-flex'>
+          <UncontrolledDropdown>
+            <DropdownToggle className='pr-1' tag='span'>
+              <MoreVertical size={15} />
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                <FileText size={15} />
+                <span className='align-middle ml-50'>Details</span>
+              </DropdownItem>
+              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                <Archive size={15} />
+                <span className='align-middle ml-50'>Archive</span>
+              </DropdownItem>
+              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                <Trash size={15} />
+                <span className='align-middle ml-50'>Delete</span>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          <Edit size={15} />
+        </div>
+      )
+    }
+  }
+]
 
   // ** Function to handle Modal toggle
   const handleModal = () => setModal(!modal)
@@ -49,6 +163,8 @@ const DataTableWithButtons = () => {
     const value = e.target.value
     let updatedData = []
     setSearchValue(value)
+
+    const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
 
     const status = { ///this could be connectionDegree
       1: { title: 'Current', color: 'light-primary' },
@@ -61,22 +177,22 @@ const DataTableWithButtons = () => {
     if (value.length) {
       updatedData = data.filter(item => { //fetch request to server to pull all connection requests
         const startsWith =
-          item.full_name.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.post.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.email.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.age.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.salary.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.start_date.toLowerCase().startsWith(value.toLowerCase()) ||
-          status[item.status].title.toLowerCase().startsWith(value.toLowerCase())
+          item.title.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.firstName.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.lastName.toLowerCase().startsWith(value.toLowerCase())
+          // item.age.toLowerCase().startsWith(value.toLowerCase()) ||
+          // item.salary.toLowerCase().startsWith(value.toLowerCase()) ||
+          // item.start_date.toLowerCase().startsWith(value.toLowerCase()) ||
+          // status[item.status].title.toLowerCase().startsWith(value.toLowerCase())
 
         const includes =
-          item.full_name.toLowerCase().includes(value.toLowerCase()) ||
-          item.post.toLowerCase().includes(value.toLowerCase()) ||
-          item.email.toLowerCase().includes(value.toLowerCase()) ||
-          item.age.toLowerCase().includes(value.toLowerCase()) ||
-          item.salary.toLowerCase().includes(value.toLowerCase()) ||
-          item.start_date.toLowerCase().includes(value.toLowerCase()) ||
-          status[item.status].title.toLowerCase().includes(value.toLowerCase())
+          item.fullName.toLowerCase().includes(value.toLowerCase()) ||
+          item.firstName.toLowerCase().includes(value.toLowerCase()) ||
+          item.lastName.toLowerCase().includes(value.toLowerCase())
+          // item.age.toLowerCase().includes(value.toLowerCase()) ||
+          // item.salary.toLowerCase().includes(value.toLowerCase()) ||
+          // item.start_date.toLowerCase().includes(value.toLowerCase()) ||
+          // status[item.status].title.toLowerCase().includes(value.toLowerCase())
 
         if (startsWith) {
           return startsWith
