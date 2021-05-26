@@ -4,6 +4,7 @@ import Breadcrumbs from '@components/breadcrumbs'
 import { Card, CardHeader, CardBody, CardTitle, CardText, CardLink } from 'reactstrap'
 import VerticalForm from './forms/VerticalForm'
 import TableWithButtons from './tables/data-tables/basic/TableWithButtons'
+import TableExpandable from './tables/data-tables/basic/TableExpandable'
 import StatsCard from './cards/statistics/StatsCard'
 import CardCongratulations from './cards/advance/CardCongratulations'
 import { ThemeColors } from '../utility/context/ThemeColors'
@@ -27,6 +28,14 @@ const Home = () => {
         </Col>
           </Row>
       </Fragment>
+
+      <Fragment>
+      <Row>
+        <Col sm='12'>
+          <TableExpandable />
+        </Col>
+      </Row>
+    </Fragment>
       
     <Fragment>
       <Row>

@@ -46,7 +46,7 @@ const DataTableWithButtons = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle tag='h4'>Expandable Row</CardTitle>
+        <CardTitle tag='h4'>LinkedIn Connections</CardTitle>
       </CardHeader>
       <DataTable
         noHeader
