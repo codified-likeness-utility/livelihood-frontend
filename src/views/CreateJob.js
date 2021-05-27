@@ -1,4 +1,5 @@
 import CreateApplication from './CreateApplication'
+import DataTableWithButtons from './tables/data-tables/basic/TableWithButtons'
 
 const CreateJob = result => {
     fetch('http://localhost:3000/api/v1/jobs', {
@@ -13,6 +14,7 @@ const CreateJob = result => {
         .then(response => response.json())
         .then(newJob => {
             CreateApplication(newJob)
+            DataTableWithButtons()
         })
 }
 

@@ -9,6 +9,7 @@ import ReactPaginate from 'react-paginate'
 import { ChevronDown, MoreVertical, FileText, Archive, Trash, Edit  } from 'react-feather'
 import DataTable from 'react-data-table-component'
 import { Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+export { useEffect }
 
 const DataTableWithButtons = () => {
   // ** State
@@ -31,6 +32,7 @@ const DataTableWithButtons = () => {
     })
       .then(response => response.json())
       .then(associateData => {
+        console.log(associateData)
         setData(associateData)
       })
   }

@@ -1,5 +1,6 @@
 import moment from 'moment';
 
+
 const CreateAssociate = result => {
     
     result.map(res => {
@@ -24,7 +25,10 @@ const CreateAssociate = result => {
             })
         })
             .then(response => response.json())
-            .then(associate => console.log(associate))
+            .then(associate => {
+                console.log(associate)
+            })
+
     })
 }
 
