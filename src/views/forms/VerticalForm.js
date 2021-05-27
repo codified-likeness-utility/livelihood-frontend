@@ -23,7 +23,6 @@ import {
 
 const VerticalForm = () => {
 	const { register, errors, handleSubmit, trigger, reset } = useForm();
-
 	const [valErrors, setValErrors] = useState({});
 	const [searchUrl, setSearchUrl] = useState("");
 	const [personalizedMessage, setPersonalizedMessage] = useState("");
@@ -45,7 +44,6 @@ const VerticalForm = () => {
 			"Growth-Hacking-Credentials",
 			account
 		);
-		// myHeaders.append("Content-Type", "application/json")
 			
 		const requestOptions = {
 			method: "POST",
