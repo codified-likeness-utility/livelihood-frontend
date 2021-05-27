@@ -156,7 +156,7 @@ const Login = props => {
                 <span>Create an account</span>
               </Link>
             </p>
-            <div className='divider my-2'>
+            {/* <div className='divider my-2'>
               <div className='divider-text'>or</div>
             </div>
             <div className='auth-footer-btn d-flex justify-content-center'>
@@ -172,7 +172,7 @@ const Login = props => {
               <Button.Ripple className='mr-0' color='github'>
                 <GitHub size={14} />
               </Button.Ripple>
-            </div>
+            </div> */}
           </Col>
         </Col>
       </Row>

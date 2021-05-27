@@ -1,7 +1,6 @@
 import CreateApplication from './CreateApplication'
 
 const CreateJob = result => {
-
     fetch('http://localhost:3000/api/v1/jobs', {
         method: 'POST',
         headers: {
@@ -13,7 +12,7 @@ const CreateJob = result => {
     })
         .then(response => response.json())
         .then(newJob => {
-            debugger
+            CreateApplication(newJob)
         })
 }
 

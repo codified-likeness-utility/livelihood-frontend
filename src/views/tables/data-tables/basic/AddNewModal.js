@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import classnames from "classnames";
 import CreateJob from "../../../CreateJob";
 import Flatpickr from "react-flatpickr";
+
 import {
 	User,
 	Briefcase,
@@ -47,8 +48,7 @@ const AddNewModal = ({ open, handleModal }) => {
 
   const onSubmit = (data) => {
     console.log(dateApplied)
-		debugger;
-		CreateJob(data);
+    CreateJob(data);
 	};
 
 	const handleJobTitleChange = (e) => {

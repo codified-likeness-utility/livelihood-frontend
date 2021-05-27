@@ -1,13 +1,8 @@
-// ** React Imports
+
 import { Fragment, useState, useEffect, forwardRef } from 'react'
-
-// ** Table Data & Columns
-// import { data, columns } from '../data'
 import Avatar from '@components/avatar'
-// ** Add New Modal Component
 import AddNewModal from './AddNewModal'
-
-// ** Third Party Components
+import { ThemeColors } from '../../../../utility/context/ThemeColors'
 import ReactPaginate from 'react-paginate'
 import DataTable from 'react-data-table-component'
 import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus, MoreVertical, Archive, Trash, Edit } from 'react-feather'
@@ -50,7 +45,7 @@ const DataTableWithButtons = () => {
 
 // ** Get initial Data
   const loadData = async () => {
-    fetch('http://localhost:3000/api/v1/associates', {
+    fetch('http://localhost:3000/api/v1/jobs', {
       method: 'GET',
       headers: {
         "content-type": "application/json",
@@ -62,15 +57,26 @@ const DataTableWithButtons = () => {
       .then(associateData => {
         setData(associateData)
       })
-}
+  }
   
+
+  
+const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
+
+    const status = { ///this could be connectionDegree
+      1: { title: 'Current', color: 'light-primary' },
+      2: { title: 'Professional', color: 'light-success' },
+      3: { title: 'Rejected', color: 'light-danger' },
+      4: { title: 'Resigned', color: 'light-warning' },
+      5: { title: 'Applied', color: 'light-info' }
+    }
 
 const columns = [
   {
-    name: 'Name',
-    selector: 'fullName',
+    name: 'Title',
+    selector: 'jobTitle',
     sortable: true,
-    minWidth: '250px',
+    minWidth: '300px',
     cell: row => (
       <div className='d-flex align-items-center'>
         {/* {row.avatar === '' ? (
@@ -79,23 +85,23 @@ const columns = [
           <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
         )} */}
         <div className='user-info text-truncate ml-1'>
-          <span className='d-block font-weight-bold text-truncate'>{row.fullName}</span>
+          <span className='d-block font-weight-bold text-truncate'>{row.jobTitle}</span>
           <small>{row.post}</small>
         </div>
       </div>
     )
   },
   {
-    name: 'Email',
-    selector: 'email',
+    name: 'Company',
+    selector: 'companyName',
     sortable: true,
-    minWidth: '250px'
+    minWidth: '100px'
   },
   {
-    name: 'Date',
+    name: 'Date Applied',
     selector: 'start_date',
     sortable: true,
-    minWidth: '150px'
+    minWidth: '100px'
   },
 
   {
@@ -110,19 +116,19 @@ const columns = [
     sortable: true,
     minWidth: '100px'
   },
-  // {
-  //   name: 'Status',
-  //   selector: 'status',
-  //   sortable: true,
-  //   minWidth: '150px',
-  //   cell: row => {
-  //     return (
-  //       <Badge color={status[row.status].color} pill>
-  //         {status[row.status].title}
-  //       </Badge>
-  //     )
-  //   }
-  // },
+  {
+    name: 'Status',
+    selector: 'status',
+    sortable: true,
+    minWidth: '150px',
+    cell: row => {
+      return (
+        <Badge color={status[Math.floor(Math.random() * 5) + 1].color} pill>
+          {status[Math.floor(Math.random() * 5) + 1].title}
+        </Badge>
+      )
+    }
+  },
   {
     name: 'Actions',
     allowOverflow: true,
@@ -164,31 +170,23 @@ const columns = [
     let updatedData = []
     setSearchValue(value)
 
-    const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
-
-    const status = { ///this could be connectionDegree
-      1: { title: 'Current', color: 'light-primary' },
-      2: { title: 'Professional', color: 'light-success' },
-      3: { title: 'Rejected', color: 'light-danger' },
-      4: { title: 'Resigned', color: 'light-warning' },
-      5: { title: 'Applied', color: 'light-info' }
-    }
-
+    
     if (value.length) {
-      updatedData = data.filter(item => { //fetch request to server to pull all connection requests
+      debugger 
+      updatedData = data.filter(item => {
         const startsWith =
-          item.title.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.firstName.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.lastName.toLowerCase().startsWith(value.toLowerCase())
+          item.jobTitle.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.companyName.toLowerCase().startsWith(value.toLowerCase())
+          // item.description.toLowerCase().startsWith(value.toLowerCase())
           // item.age.toLowerCase().startsWith(value.toLowerCase()) ||
           // item.salary.toLowerCase().startsWith(value.toLowerCase()) ||
           // item.start_date.toLowerCase().startsWith(value.toLowerCase()) ||
           // status[item.status].title.toLowerCase().startsWith(value.toLowerCase())
 
         const includes =
-          item.fullName.toLowerCase().includes(value.toLowerCase()) ||
-          item.firstName.toLowerCase().includes(value.toLowerCase()) ||
-          item.lastName.toLowerCase().includes(value.toLowerCase())
+          item.jobTitle.toLowerCase().includes(value.toLowerCase()) ||
+          item.companyName.toLowerCase().includes(value.toLowerCase())
+          // item.description.toLowerCase().includes(value.toLowerCase())
           // item.age.toLowerCase().includes(value.toLowerCase()) ||
           // item.salary.toLowerCase().includes(value.toLowerCase()) ||
           // item.start_date.toLowerCase().includes(value.toLowerCase()) ||
@@ -277,7 +275,7 @@ const columns = [
           selectableRowsComponent={BootstrapCheckbox}
         />
       </Card>
-      <AddNewModal open={modal} handleModal={handleModal} />
+      <AddNewModal open={modal} handleModal={handleModal}/>
     </Fragment>
   )
 }

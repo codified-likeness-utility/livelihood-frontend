@@ -39,13 +39,19 @@ const DataTableWithButtons = () => {
     return (
       <div className='expandable-content p-2'>
         <p>
+          <span className='font-weight-bold'>Title:</span> {data.title}
+        </p>
+        <p>
           <span className='font-weight-bold'>Email:</span> {data.email}
         </p>
         <p>
-          <span className='font-weight-bold'>Experience:</span> {data.experience}
+          <span className='font-weight-bold'>Profile URL: </span><a href={data.profileUrl}> {data.profileUrl}</a>
         </p>
         <p className='m-0'>
-          <span className='font-weight-bold'>Post:</span> {data.post}
+          <span className='font-weight-bold'>Connection Degree:</span> {data.connectionDegree}
+        </p>
+        <p className='m-0'>
+          <span className='font-weight-bold'>Last Message Sent:</span> {data.lastMessageSent}
         </p>
       </div>
     )
@@ -66,7 +72,7 @@ const DataTableWithButtons = () => {
       name: 'Name',
       selector: 'full_name',
       sortable: true,
-      minWidth: '250px',
+      minWidth: '200px',
       cell: row => (
         <div className='d-flex align-items-center'>
           {/* {row.avatar === '' ? (
@@ -75,8 +81,8 @@ const DataTableWithButtons = () => {
             <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
           )} */}
           <div className='user-info text-truncate ml-1'>
-            <span className='d-block font-weight-bold text-truncate'>{row.fullName}</span>
-            <small>{row.connectionDegree}</small>
+            <span className='d-block font-weight-bold text-truncate'>{row.firstName} {row.lastName}</span>
+            {/* <small>{row.connectionDegree}</small> */}
           </div>
         </div>
       )
@@ -85,13 +91,13 @@ const DataTableWithButtons = () => {
       name: 'Company',
       selector: 'company',
       sortable: true,
-      minWidth: '250px'
+      minWidth: '200px'
     },
     {
       name: 'Title',
       selector: 'title',
       sortable: true,
-      minWidth: '150px'
+      minWidth: '250px'
     },
   
     {
@@ -100,12 +106,12 @@ const DataTableWithButtons = () => {
       sortable: true,
       minWidth: '150px'
     },
-    {
-      name: 'Last Message Sent',
-      selector: 'lastMessageSent',
-      sortable: true,
-      minWidth: '100px'
-    },
+    // {
+    //   name: 'Last Message Sent',
+    //   selector: 'lastMessageSent',
+    //   sortable: true,
+    //   minWidth: '100px'
+    // },
     {
       name: 'Status',
       selector: 'status',

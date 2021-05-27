@@ -19,7 +19,8 @@ const CreateAssociate = result => {
                 connectionDegree: res.connectionDegree.replace(/\W/g, ''),
                 linkedinPremium: res.isPremium,
                 message1: res.message,
-                lastMessageSent: moment().format('YYYY/MM/D hh:mm:ss SSS')
+                lastMessageSent: moment().format('MM/D/YYYY hh:mm:ss'),
+                profileImageUrl: res.profileImageUrl
             })
         })
             .then(response => response.json())

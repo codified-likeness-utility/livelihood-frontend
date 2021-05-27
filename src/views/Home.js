@@ -8,6 +8,7 @@ import TableExpandable from './tables/data-tables/basic/TableExpandable'
 import StatsCard from './cards/statistics/StatsCard'
 import CardCongratulations from './cards/advance/CardCongratulations'
 import { ThemeColors } from '../utility/context/ThemeColors'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 const Home = () => {
   const { colors } = useContext(ThemeColors),
