@@ -41,6 +41,7 @@ const DataTableWithButtons = () => {
   const [searchValue, setSearchValue] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [data, setData] = useState()
+  const [isLoading, setLoading] = useState(false)
 
   const handleLoad = () => {useEffect()}
 
@@ -50,6 +51,7 @@ const DataTableWithButtons = () => {
 
 // ** Get initial Data
   const loadData = async () => {
+    setLoading(true)
     console.log("Loading...")
     fetch('http://localhost:3000/api/v1/jobs', {
       method: 'GET',
@@ -62,7 +64,7 @@ const DataTableWithButtons = () => {
       .then(response => response.json())
       .then(associateData => {
         setData(associateData)
-        
+        setLoading(false)
       })
   }
 
@@ -247,9 +249,16 @@ const DataTableWithButtons = () => {
           <CardTitle tag='h4'>Job Applications Tracker</CardTitle>
           <div className='d-flex mt-md-0 mt-1'>
             
-            <Button.Ripple color='primary'>
-              <Spinner color='white' size='sm' />
-            </Button.Ripple>
+          <Button.Ripple
+									className='mr-1'
+									color='primary'
+									type='submit'
+									onClick={(e) =>
+										console.log("form submitted!")
+									}
+								>
+									{isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Refresh"}
+								</Button.Ripple>
             
             <Button className='ml-2' color='primary' onClick={handleModal}>
               <Plus size={15} />

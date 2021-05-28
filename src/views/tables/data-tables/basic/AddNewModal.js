@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import classnames from "classnames";
 import CreateJob from "../../../CreateJob";
 import Flatpickr from "react-flatpickr";
-
 import {
 	User,
 	Briefcase,
@@ -27,9 +26,8 @@ import {
 	InputGroupAddon,
 	InputGroupText,
 	Input,
-	Label
+	Label,
 } from "reactstrap";
-
 import "@styles/react/libs/flatpickr/flatpickr.scss";
 
 const AddNewModal = ({ state, open, handleModal }) => {
@@ -47,9 +45,9 @@ const AddNewModal = ({ state, open, handleModal }) => {
 		<X className='cursor-pointer' size={15} onClick={handleModal} />
 	);
 
-	const onSubmit = (data) => {
-		console.log(dateApplied);
-		CreateJob(data);
+  const onSubmit = (data) => {
+    console.log(dateApplied)
+    CreateJob(data);
 	};
 
 	const handleJobTitleChange = (e) => {
@@ -85,12 +83,12 @@ const AddNewModal = ({ state, open, handleModal }) => {
 		if (errs.salary) delete errs.salary;
 		setSalary(e.target.value);
 		setValErrors(errs);
-	};
-
-	const handleDateAppliedChange = (e) => {
+  };
+  
+  const handleDateAppliedChange = (e) => {
 		const errs = valErrors;
 		if (errs.dateApplied) delete errs.dateApplied;
-		setDateApplied(e.target.value);
+    setDateApplied(e.target.value);
 		setValErrors(errs);
 	};
 
@@ -215,8 +213,8 @@ const AddNewModal = ({ state, open, handleModal }) => {
 								<InputGroupText>
 									<Calendar size={15} />
 								</InputGroupText>
-							</InputGroupAddon>
-							<Input
+              					</InputGroupAddon>
+              					<Input
 								type='date'
 								value={dateApplied}
 								name='dateApplied'
@@ -290,30 +288,30 @@ const AddNewModal = ({ state, open, handleModal }) => {
 								type='textarea'
 								value={description}
 								name='description'
-								id='description'
-								placeholder='Short description of the job from job post page'
-								onChange={handleDescriptionChange}
+                				id='description'
+               					placeholder='Short description of the job from job post page'
+                				onChange={handleDescriptionChange}
 								className={classnames({
-									"is-invalid": errors["description"],
-								})}
+										"is-invalid": errors["description"],
+									})}
 								innerRef={register({
-									required: true,
-									validate: (value) => value !== "",
-								})}
-							/>
-							{Object.keys(valErrors).length &&
-							valErrors.description ? (
-								<small className='text-danger'>
-									{valErrors.description}
-								</small>
-							) : null}
+										required: true,
+										validate: (value) => value !== "",
+									})}
+								/>
+								{Object.keys(valErrors).length &&
+								valErrors.description ? (
+									<small className='text-danger'>
+										{valErrors.description}
+									</small>
+								) : null}
 						</InputGroup>
 					</FormGroup>
 
 					<Button
 						className='mr-1'
-						color='primary'
-						type='submit'
+            			color='primary'
+            			type='submit'
 						onClick={handleModal}
 					>
 						Submit
