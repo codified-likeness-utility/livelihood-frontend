@@ -1,14 +1,11 @@
 // ** React Imports
 import { useState, useEffect } from 'react'
-
-// ** Table columns & Expandable Data
-// import ExpandableTable, { data, columns } from '../data'
-
-// ** Third Party Components
+import Avatar from '@components/avatar'
 import ReactPaginate from 'react-paginate'
 import { ChevronDown, MoreVertical, FileText, Archive, Trash, Edit  } from 'react-feather'
 import DataTable from 'react-data-table-component'
 import { Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+
 
 const DataTableWithButtons = () => {
   // ** State
@@ -31,6 +28,7 @@ const DataTableWithButtons = () => {
     })
       .then(response => response.json())
       .then(associateData => {
+        console.log(associateData)
         setData(associateData)
       })
   }
@@ -39,13 +37,19 @@ const DataTableWithButtons = () => {
     return (
       <div className='expandable-content p-2'>
         <p>
+          <span className='font-weight-bold'>Title:</span> {data.title}
+        </p>
+        <p>
           <span className='font-weight-bold'>Email:</span> {data.email}
         </p>
         <p>
-          <span className='font-weight-bold'>Experience:</span> {data.experience}
+          <span className='font-weight-bold'>Profile URL: </span><a href={data.profileUrl}> {data.profileUrl}</a>
+        </p>
+        <p>
+          <span className='font-weight-bold'>Connection Degree:</span> {data.connectionDegree}
         </p>
         <p className='m-0'>
-          <span className='font-weight-bold'>Post:</span> {data.post}
+          <span className='font-weight-bold'>Last Message Sent:</span> {data.lastMessageSent}
         </p>
       </div>
     )
@@ -53,12 +57,10 @@ const DataTableWithButtons = () => {
 
   const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
 
-    const status = { ///this could be connectionDegree
-      1: { title: 'Current', color: 'light-primary' },
-      2: { title: 'Professional', color: 'light-success' },
-      3: { title: 'Rejected', color: 'light-danger' },
-      4: { title: 'Resigned', color: 'light-warning' },
-      5: { title: 'Applied', color: 'light-info' }
+    const status = {
+      1: { title: 'Connected', color: 'light-success' },
+      2: { title: 'Pending', color: 'light-warning' },
+      3: { title: 'Pending', color: 'light-warning' }
     }
 
   const columns = [
@@ -66,17 +68,17 @@ const DataTableWithButtons = () => {
       name: 'Name',
       selector: 'full_name',
       sortable: true,
-      minWidth: '250px',
+      minWidth: '200px',
       cell: row => (
         <div className='d-flex align-items-center'>
-          {/* {row.avatar === '' ? (
-            <Avatar color={`light-${states[row.status]}`} content={row.full_name} initials />
+          {row.profileImageUrl === null ? (
+            <Avatar color='light-primary' content={row.firstName + " " + row.lastName} initials />
           ) : (
-            <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
-          )} */}
+            <Avatar img={row.profileImageUrl} />
+          )}
           <div className='user-info text-truncate ml-1'>
-            <span className='d-block font-weight-bold text-truncate'>{row.fullName}</span>
-            <small>{row.connectionDegree}</small>
+            <span className='d-block font-weight-bold text-truncate'>{row.firstName} {row.lastName}</span>
+            {/* <small>{row.connectionDegree}</small> */}
           </div>
         </div>
       )
@@ -85,13 +87,13 @@ const DataTableWithButtons = () => {
       name: 'Company',
       selector: 'company',
       sortable: true,
-      minWidth: '250px'
+      minWidth: '200px'
     },
     {
       name: 'Title',
       selector: 'title',
       sortable: true,
-      minWidth: '150px'
+      minWidth: '250px'
     },
   
     {
@@ -101,20 +103,14 @@ const DataTableWithButtons = () => {
       minWidth: '150px'
     },
     {
-      name: 'Last Message Sent',
-      selector: 'lastMessageSent',
-      sortable: true,
-      minWidth: '100px'
-    },
-    {
       name: 'Status',
       selector: 'status',
       sortable: true,
       minWidth: '150px',
       cell: row => {
         return (
-          <Badge color={status[Math.floor(Math.random() * 5) + 1].color} pill>
-            {status[Math.floor(Math.random() * 5) + 1].title}
+          <Badge color={row.connectionDegree === '1st' ? status[1].color : status[2].color } pill>
+            {row.connectionDegree === '1st' ? status[1].title : status[2].title}
           </Badge>
         )
       }
@@ -163,7 +159,7 @@ const DataTableWithButtons = () => {
       nextLabel={''}
       forcePage={currentPage}
       onPageChange={page => handlePagination(page)}
-      pageCount={10}
+      pageCount={data.length / 7 || 1}
       breakLabel={'...'}
       pageRangeDisplayed={2}
       marginPagesDisplayed={2}

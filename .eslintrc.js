@@ -72,11 +72,11 @@
 //     'prefer-template': 'error'
 //   }
 
-  // rules: {
-  //   'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-  //   'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-  //   semi: ['error', 'never'],
-  //   'max-len': 'off',
-  //   camelcase: ['error', { properties: 'never', ignoreDestructuring: true, ignoreImports: true }]
-  // }
+//   rules: {
+//     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+//     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+//     semi: ['error', 'never'],
+//     'max-len': 'off',
+//     camelcase: ['error', { properties: 'never', ignoreDestructuring: true, ignoreImports: true }]
+//   }
 // }

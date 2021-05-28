@@ -1,13 +1,8 @@
-// ** React Imports
+
 import { Fragment, useState, useEffect, forwardRef } from 'react'
-
-// ** Table Data & Columns
-// import { data, columns } from '../data'
 import Avatar from '@components/avatar'
-// ** Add New Modal Component
 import AddNewModal from './AddNewModal'
-
-// ** Third Party Components
+import { ThemeColors } from '../../../../utility/context/ThemeColors'
 import ReactPaginate from 'react-paginate'
 import DataTable from 'react-data-table-component'
 import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus, MoreVertical, Archive, Trash, Edit } from 'react-feather'
@@ -25,8 +20,11 @@ import {
   Row,
   Col,
   UncontrolledDropdown,
-  Badge
+  Badge,
+  Spinner
 } from 'reactstrap'
+
+
 
 // ** Bootstrap Checkbox Component
 const BootstrapCheckbox = forwardRef(({ onClick, ...rest }, ref) => (
@@ -42,7 +40,10 @@ const DataTableWithButtons = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [filteredData, setFilteredData] = useState([])
-  const [data, setData] = useState([])
+  const [data, setData] = useState()
+  const [isLoading, setLoading] = useState(false)
+
+  const handleLoad = () => {useEffect()}
 
   useEffect(() => {
     loadData();
@@ -50,7 +51,9 @@ const DataTableWithButtons = () => {
 
 // ** Get initial Data
   const loadData = async () => {
-    fetch('http://localhost:3000/api/v1/associates', {
+    setLoading(true)
+    console.log("Loading...")
+    fetch('http://localhost:3000/api/v1/jobs', {
       method: 'GET',
       headers: {
         "content-type": "application/json",
@@ -61,155 +64,158 @@ const DataTableWithButtons = () => {
       .then(response => response.json())
       .then(associateData => {
         setData(associateData)
+        setLoading(false)
       })
-}
+  }
+
+  const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
   
+  const status = { ///this could be connectionDegree
+    1: { title: 'Current', color: 'light-primary' },
+    2: { title: 'Professional', color: 'light-success' },
+    3: { title: 'Rejected', color: 'light-danger' },
+    4: { title: 'Resigned', color: 'light-warning' },
+    5: { title: 'Applied', color: 'light-info' }
+  }
 
-const columns = [
-  {
-    name: 'Name',
-    selector: 'fullName',
-    sortable: true,
-    minWidth: '250px',
-    cell: row => (
-      <div className='d-flex align-items-center'>
-        {/* {row.avatar === '' ? (
-          <Avatar color={`light-${states[row.status]}`} content={row.full_name} initials />
-        ) : (
-          <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
-        )} */}
-        <div className='user-info text-truncate ml-1'>
-          <span className='d-block font-weight-bold text-truncate'>{row.fullName}</span>
-          <small>{row.post}</small>
-        </div>
-      </div>
-    )
-  },
-  {
-    name: 'Email',
-    selector: 'email',
-    sortable: true,
-    minWidth: '250px'
-  },
-  {
-    name: 'Date',
-    selector: 'start_date',
-    sortable: true,
-    minWidth: '150px'
-  },
-
-  {
-    name: 'Salary',
-    selector: 'salary',
-    sortable: true,
-    minWidth: '150px'
-  },
-  {
-    name: 'Age',
-    selector: 'age',
-    sortable: true,
-    minWidth: '100px'
-  },
-  // {
-  //   name: 'Status',
-  //   selector: 'status',
-  //   sortable: true,
-  //   minWidth: '150px',
-  //   cell: row => {
-  //     return (
-  //       <Badge color={status[row.status].color} pill>
-  //         {status[row.status].title}
-  //       </Badge>
-  //     )
-  //   }
-  // },
-  {
-    name: 'Actions',
-    allowOverflow: true,
-    cell: row => {
-      return (
-        <div className='d-flex'>
-          <UncontrolledDropdown>
-            <DropdownToggle className='pr-1' tag='span'>
-              <MoreVertical size={15} />
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                <FileText size={15} />
-                <span className='align-middle ml-50'>Details</span>
-              </DropdownItem>
-              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                <Archive size={15} />
-                <span className='align-middle ml-50'>Archive</span>
-              </DropdownItem>
-              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                <Trash size={15} />
-                <span className='align-middle ml-50'>Delete</span>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-          <Edit size={15} />
+  const columns = [
+    {
+      name: 'Title',
+      selector: 'jobTitle',
+      sortable: true,
+      minWidth: '300px',
+      cell: row => (
+        <div className='d-flex align-items-center'>
+          {/* {row.avatar === '' ? (
+            <Avatar color={`light-${states[row.status]}`} content={row.full_name} initials />
+          ) : (
+            <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
+          )} */}
+          <div className='user-info text-truncate ml-1'>
+            <span className='d-block font-weight-bold text-truncate'>{row.jobTitle}</span>
+            <small>{row.post}</small>
+          </div>
         </div>
       )
+    },
+    {
+      name: 'Company',
+      selector: 'companyName',
+      sortable: true,
+      minWidth: '100px'
+    },
+    {
+      name: 'Date Applied',
+      selector: 'start_date',
+      sortable: true,
+      minWidth: '100px'
+    },
+
+    {
+      name: 'Salary',
+      selector: 'salary',
+      sortable: true,
+      minWidth: '150px'
+    },
+    {
+      name: 'Age',
+      selector: 'age',
+      sortable: true,
+      minWidth: '100px'
+    },
+    {
+      name: 'Status',
+      selector: 'status',
+      sortable: true,
+      minWidth: '150px',
+      cell: row => {
+        return (
+          <Badge color={status[Math.floor(Math.random() * 5) + 1].color} pill>
+            {status[Math.floor(Math.random() * 5) + 1].title}
+          </Badge>
+        )
+      }
+    },
+    {
+      name: 'Actions',
+      allowOverflow: true,
+      cell: row => {
+        return (
+          <div className='d-flex'>
+            <UncontrolledDropdown>
+              <DropdownToggle className='pr-1' tag='span'>
+                <MoreVertical size={15} />
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                  <FileText size={15} />
+                  <span className='align-middle ml-50'>Details</span>
+                </DropdownItem>
+                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                  <Archive size={15} />
+                  <span className='align-middle ml-50'>Archive</span>
+                </DropdownItem>
+                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                  <Trash size={15} />
+                  <span className='align-middle ml-50'>Delete</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+            <Edit size={15} />
+          </div>
+        )
+      }
     }
-  }
-]
+  ]
 
-  // ** Function to handle Modal toggle
-  const handleModal = () => setModal(!modal)
+   // ** Function to handle Modal toggle
+   const handleModal = () => setModal(!modal)
 
-  // ** Function to handle filter
-  const handleFilter = e => {
-    const value = e.target.value
-    let updatedData = []
-    setSearchValue(value)
-
-    const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
-
-    const status = { ///this could be connectionDegree
-      1: { title: 'Current', color: 'light-primary' },
-      2: { title: 'Professional', color: 'light-success' },
-      3: { title: 'Rejected', color: 'light-danger' },
-      4: { title: 'Resigned', color: 'light-warning' },
-      5: { title: 'Applied', color: 'light-info' }
-    }
-
-    if (value.length) {
-      updatedData = data.filter(item => { //fetch request to server to pull all connection requests
-        const startsWith =
-          item.title.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.firstName.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.lastName.toLowerCase().startsWith(value.toLowerCase())
-          // item.age.toLowerCase().startsWith(value.toLowerCase()) ||
-          // item.salary.toLowerCase().startsWith(value.toLowerCase()) ||
-          // item.start_date.toLowerCase().startsWith(value.toLowerCase()) ||
-          // status[item.status].title.toLowerCase().startsWith(value.toLowerCase())
-
-        const includes =
-          item.fullName.toLowerCase().includes(value.toLowerCase()) ||
-          item.firstName.toLowerCase().includes(value.toLowerCase()) ||
-          item.lastName.toLowerCase().includes(value.toLowerCase())
-          // item.age.toLowerCase().includes(value.toLowerCase()) ||
-          // item.salary.toLowerCase().includes(value.toLowerCase()) ||
-          // item.start_date.toLowerCase().includes(value.toLowerCase()) ||
-          // status[item.status].title.toLowerCase().includes(value.toLowerCase())
-
-        if (startsWith) {
-          return startsWith
-        } else if (!startsWith && includes) {
-          return includes
-        } else return null
-      })
-      setFilteredData(updatedData)
-      setSearchValue(value)
-    }
-  }
-
-  // ** Function to handle Pagination
-  const handlePagination = page => {
-    setCurrentPage(page.selected)
-  }
-
+   // ** Function to handle filter
+   const handleFilter = e => {
+     const value = e.target.value
+     let updatedData = []
+     setSearchValue(value)
+    //  const cleanData = data.filter(item => {
+    //   return item !== undefined && item !== null
+    // })
+    //  debugger
+     if (value.length) {
+       updatedData = data.filter(item => {
+         const startsWith =
+           item.jobTitle.toLowerCase().startsWith(value.toLowerCase()) ||
+           item.companyName.toLowerCase().startsWith(value.toLowerCase())
+           // item.description.toLowerCase().startsWith(value.toLowerCase())
+           // item.age.toLowerCase().startsWith(value.toLowerCase()) ||
+           // item.salary.toLowerCase().startsWith(value.toLowerCase()) ||
+           // item.start_date.toLowerCase().startsWith(value.toLowerCase()) ||
+           // status[item.status].title.toLowerCase().startsWith(value.toLowerCase())
+ 
+         const includes =
+           item.jobTitle.toLowerCase().includes(value.toLowerCase()) ||
+           item.companyName.toLowerCase().includes(value.toLowerCase())
+           // item.description.toLowerCase().includes(value.toLowerCase())
+           // item.age.toLowerCase().includes(value.toLowerCase()) ||
+           // item.salary.toLowerCase().includes(value.toLowerCase()) ||
+           // item.start_date.toLowerCase().includes(value.toLowerCase()) ||
+           // status[item.status].title.toLowerCase().includes(value.toLowerCase())
+ 
+         if (startsWith) {
+           return startsWith
+         } else if (!startsWith && includes) {
+           return includes
+         } else return null
+       })
+       setFilteredData(updatedData)
+       setSearchValue(value)
+     }
+   }
+ 
+   // ** Function to handle Pagination
+   const handlePagination = page => {
+     setCurrentPage(page.selected)
+   }
+  
   // ** Custom Pagination
   const CustomPagination = () => (
     <ReactPaginate
@@ -242,10 +248,23 @@ const columns = [
         <CardHeader className='flex-md-row flex-column align-md-items-center align-items-start border-bottom'>
           <CardTitle tag='h4'>Job Applications Tracker</CardTitle>
           <div className='d-flex mt-md-0 mt-1'>
+            
+          <Button.Ripple
+									className='mr-1'
+									color='primary'
+									type='submit'
+									onClick={(e) =>
+										console.log("form submitted!")
+									}
+								>
+									{isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Refresh"}
+								</Button.Ripple>
+            
             <Button className='ml-2' color='primary' onClick={handleModal}>
               <Plus size={15} />
               <span className='align-middle ml-50'>Add Record</span>
             </Button>
+            
           </div>
         </CardHeader>
         <Row className='justify-content-end mx-0'>
@@ -259,7 +278,7 @@ const columns = [
               bsSize='sm'
               id='search-input'
               value={searchValue}
-              onChange={handleFilter}
+              onChange={(e) => handleFilter(e)}
             />
           </Col>
         </Row>
@@ -277,7 +296,7 @@ const columns = [
           selectableRowsComponent={BootstrapCheckbox}
         />
       </Card>
-      <AddNewModal open={modal} handleModal={handleModal} />
+      <AddNewModal state={loadData} open={modal} handleModal={handleModal}/>
     </Fragment>
   )
 }

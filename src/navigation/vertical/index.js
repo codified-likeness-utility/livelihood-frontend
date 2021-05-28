@@ -1,4 +1,4 @@
-import { Mail, Home } from 'react-feather'
+import { Mail, Home, Zap, Terminal, Activity } from 'react-feather'
 
 export default [
   {
@@ -8,9 +8,21 @@ export default [
     navLink: '/home'
   },
   {
+    id: 'automations',
+    title: 'Automations',
+    icon: <Zap size={20} />,
+    navLink: '/automations'
+  },
+  {
+    id: 'portfolio',
+    title: 'Portfolio',
+    icon: <Terminal size={20} />,
+    navLink: '/portfolio'
+  },
+  {
     id: 'statistics',
     title: 'Statistics',
-    icon: <Mail size={20} />,
+    icon: <Activity size={20} />,
     navLink: '/statistics'
   }
 ]

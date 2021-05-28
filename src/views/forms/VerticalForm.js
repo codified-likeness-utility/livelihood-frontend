@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import classnames from "classnames";
 import CreateAssociate from '../CreateAssociate'
+import LoadingSpinnerButton from '../../views/components/LoadingSpinnerButton'
 import {
 	Card,
 	CardHeader,
@@ -19,6 +20,7 @@ import {
 	Popover,
 	PopoverHeader,
 	PopoverBody,
+	Spinner
 } from "reactstrap";
 
 const VerticalForm = () => {
@@ -29,8 +31,10 @@ const VerticalForm = () => {
 	const [searchPage, setSearchPage] = useState(0);
 	const [numberOfRequests, setNumberOfRequests] = useState(0);
 	const [popoverOpen, setPopoverOpen] = useState(false);
+	const [isLoading, setLoading] = useState(false)
 
 	const onSubmit = (data) => {
+		setLoading(true)
 		const apiKey = process.env.REACT_APP_GH_API_KEY
 		const account = process.env.REACT_APP_GH_ACCOUNT
 
@@ -62,8 +66,12 @@ const VerticalForm = () => {
 			.then(result => {
 				console.log(result)
 				CreateAssociate(result.result)
+				setLoading(false)
 			})
-			.catch(error => console.log('error', error));
+			.catch(error => {
+				console.log('error', error)
+				setLoading(false)
+			});
 	};
 
 	useEffect(async () => {
@@ -98,6 +106,7 @@ const VerticalForm = () => {
 		setNumberOfRequests(e.target.value);
 		setValErrors(errs);
 	};
+
 
 	return (
 		<Card>
@@ -261,7 +270,7 @@ const VerticalForm = () => {
 										console.log("form submitted!")
 									}
 								>
-									Submit
+									{isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Submit"}
 								</Button.Ripple>
 								<Button.Ripple
 									outline

@@ -30,7 +30,7 @@ import {
 } from "reactstrap";
 import "@styles/react/libs/flatpickr/flatpickr.scss";
 
-const AddNewModal = ({ open, handleModal }) => {
+const AddNewModal = ({ state, open, handleModal }) => {
 	const { register, errors, handleSubmit, trigger, reset } = useForm();
 	const [valErrors, setValErrors] = useState({});
 	const [dateApplied, setDateApplied] = useState("");
@@ -47,8 +47,7 @@ const AddNewModal = ({ open, handleModal }) => {
 
   const onSubmit = (data) => {
     console.log(dateApplied)
-		debugger;
-		CreateJob(data);
+    CreateJob(data);
 	};
 
 	const handleJobTitleChange = (e) => {
@@ -214,8 +213,8 @@ const AddNewModal = ({ open, handleModal }) => {
 								<InputGroupText>
 									<Calendar size={15} />
 								</InputGroupText>
-              </InputGroupAddon>
-              <Input
+              					</InputGroupAddon>
+              					<Input
 								type='date'
 								value={dateApplied}
 								name='dateApplied'
@@ -289,13 +288,13 @@ const AddNewModal = ({ open, handleModal }) => {
 								type='textarea'
 								value={description}
 								name='description'
-                id='description'
-                placeholder='Short description of the job from job post page'
-                onChange={handleDescriptionChange}
-									className={classnames({
+                				id='description'
+               					placeholder='Short description of the job from job post page'
+                				onChange={handleDescriptionChange}
+								className={classnames({
 										"is-invalid": errors["description"],
 									})}
-									innerRef={register({
+								innerRef={register({
 										required: true,
 										validate: (value) => value !== "",
 									})}
@@ -311,8 +310,8 @@ const AddNewModal = ({ open, handleModal }) => {
 
 					<Button
 						className='mr-1'
-            color='primary'
-            type='submit'
+            			color='primary'
+            			type='submit'
 						onClick={handleModal}
 					>
 						Submit
