@@ -1,4 +1,5 @@
 import { Fragment, useContext } from 'react'
+import { connect } from 'react-redux'
 import { Row, Col } from 'reactstrap'
 import Breadcrumbs from '@components/breadcrumbs'
 import { Card, CardHeader, CardBody, CardTitle, CardText, CardLink } from 'reactstrap'
@@ -9,10 +10,11 @@ import StatsCard from './cards/statistics/StatsCard'
 import CardCongratulations from './cards/advance/CardCongratulations'
 import { ThemeColors } from '../utility/context/ThemeColors'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
+import { FormProvider } from 'react-hook-form'
+import { max } from 'moment'
 
 const Home = () => {
-  const { colors } = useContext(ThemeColors),
-    trackBgColor = '#e9ecef'
+
   
   return (
     <div>
@@ -58,5 +60,9 @@ const Home = () => {
     </div>
   )
 }
+// const mapStateToProps = state => {
+//   jobs: state.getData
+// }
 
+// export default connect(mapStateToProps)(Home)
 export default Home

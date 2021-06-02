@@ -1,7 +1,8 @@
-// ** Get table Data
-export const getData = () => {
-	return async (dispatch) => {
-		await fetch("http://localhost:3000/api/v1/jobs", {
+
+// ** Get Jobs from database
+export const getJobData = () => {
+	return (dispatch) => {
+		return fetch("http://localhost:3000/api/v1/jobs", {
 			method: "GET",
 			headers: {
 				"content-type": "application/json",
@@ -12,9 +13,10 @@ export const getData = () => {
 			.then((response) => response.json())
 			.then((response) => {
 				dispatch({
-					type: "GET_DATASET",
+					type: "GET_DATA",
 					data: response,
 				});
 			});
 	};
 };
+

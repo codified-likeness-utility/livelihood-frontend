@@ -2,13 +2,15 @@
 import { useState, useEffect } from 'react'
 import Avatar from '@components/avatar'
 import ReactPaginate from 'react-paginate'
-import { ChevronDown, MoreVertical, FileText, Archive, Trash, Edit  } from 'react-feather'
+import { ChevronDown, MoreVertical, FileText, Archive, Trash, Edit, UploadCloud  } from 'react-feather'
 import DataTable from 'react-data-table-component'
-import { Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
-
+import { Button, Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import ExtractionModal from './ExtractionModal'
 
 const DataTableWithButtons = () => {
-  // ** State
+
+  const [modal, setModal] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
   const [data, setData] = useState([])
 
@@ -36,6 +38,9 @@ const DataTableWithButtons = () => {
   const ExpandableTable = ({ data }) => {
     return (
       <div className='expandable-content p-2'>
+        <p>
+          <span className='font-weight-bold'>Company:</span> {data.company}
+        </p>
         <p>
           <span className='font-weight-bold'>Title:</span> {data.title}
         </p>
@@ -66,9 +71,10 @@ const DataTableWithButtons = () => {
   const columns = [
     {
       name: 'Name',
-      selector: 'full_name',
+      selector: 'firstName',
       sortable: true,
-      minWidth: '200px',
+      minWidth: '250px',
+      maxWidth: '300px',
       cell: row => (
         <div className='d-flex align-items-center'>
           {row.profileImageUrl === null ? (
@@ -83,30 +89,31 @@ const DataTableWithButtons = () => {
         </div>
       )
     },
-    {
-      name: 'Company',
-      selector: 'company',
-      sortable: true,
-      minWidth: '200px'
-    },
+    // {
+    //   name: 'Company',
+    //   selector: 'company',
+    //   sortable: true,
+    //   minWidth: '200px'
+    // },
     {
       name: 'Title',
       selector: 'title',
       sortable: true,
-      minWidth: '250px'
+      minWidth: '150px',
+      maxWidth: '600px'
     },
-  
-    {
-      name: 'Connection Degree',
-      selector: 'connectionDegree',
-      sortable: true,
-      minWidth: '150px'
-    },
+    // {
+    //   name: 'Connection Degree',
+    //   selector: 'connectionDegree',
+    //   sortable: true,
+    //   minWidth: '50px'
+    // },
     {
       name: 'Status',
-      selector: 'status',
+      selector: 'connectionDegree',
       sortable: true,
       minWidth: '150px',
+      maxWidth: '250px',
       cell: row => {
         return (
           <Badge color={row.connectionDegree === '1st' ? status[1].color : status[2].color } pill>
@@ -127,12 +134,8 @@ const DataTableWithButtons = () => {
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                  <FileText size={15} />
-                  <span className='align-middle ml-50'>Details</span>
-                </DropdownItem>
-                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                  <Archive size={15} />
-                  <span className='align-middle ml-50'>Archive</span>
+                  <UploadCloud size={15} />
+                  <span className='align-middle ml-50'>Update</span>
                 </DropdownItem>
                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
                   <Trash size={15} />
@@ -176,10 +179,21 @@ const DataTableWithButtons = () => {
     />
   )
 
+  const handleModal = () => setModal(!modal)
+
   return (
     <Card>
       <CardHeader>
         <CardTitle tag='h4'>LinkedIn Connections</CardTitle>
+        <Button.Ripple
+          className='mr-1'
+          color='primary'
+          type='submit'
+          onClick={handleModal}
+				>
+          {isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Extract New Connections"}
+				</Button.Ripple>
+
       </CardHeader>
       <DataTable
         noHeader
@@ -195,6 +209,7 @@ const DataTableWithButtons = () => {
         paginationRowsPerPageOptions={[10, 25, 50, 100]}
         paginationComponent={CustomPagination}
       />
+      <ExtractionModal open={modal} handleModal={handleModal}/>
     </Card>
   )
 }

@@ -30,7 +30,7 @@ import {
 } from "reactstrap";
 import "@styles/react/libs/flatpickr/flatpickr.scss";
 
-const AddNewModal = ({ state, open, handleModal }) => {
+const AddNewModal = ({ handleData, open, handleModal }) => {
 	const { register, errors, handleSubmit, trigger, reset } = useForm();
 	const [valErrors, setValErrors] = useState({});
 	const [dateApplied, setDateApplied] = useState("");
@@ -46,8 +46,9 @@ const AddNewModal = ({ state, open, handleModal }) => {
 	);
 
   const onSubmit = (data) => {
-    console.log(dateApplied)
-    CreateJob(data);
+		console.log(dateApplied)
+	  CreateJob(data);
+	//   handleData(data)
 	};
 
 	const handleJobTitleChange = (e) => {
@@ -321,6 +322,7 @@ const AddNewModal = ({ state, open, handleModal }) => {
 					</Button>
 				</Form>
 			</ModalBody>
+			{/* <CreateJob handleData={handleData}/> */}
 		</Modal>
 	);
 };

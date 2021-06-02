@@ -1,11 +1,13 @@
 
 import { Fragment, useState, useEffect, forwardRef } from 'react'
+import moment from 'moment';
 import Avatar from '@components/avatar'
 import AddNewModal from './AddNewModal'
 import { ThemeColors } from '../../../../utility/context/ThemeColors'
 import ReactPaginate from 'react-paginate'
 import DataTable from 'react-data-table-component'
-import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus, MoreVertical, Archive, Trash, Edit } from 'react-feather'
+import CreateApplication from '@src/views/CreateApplication'
+import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus, MoreVertical, Archive, Trash, Edit, UploadCloud } from 'react-feather'
 import {
   Card,
   CardHeader,
@@ -24,8 +26,6 @@ import {
   Spinner
 } from 'reactstrap'
 
-
-
 // ** Bootstrap Checkbox Component
 const BootstrapCheckbox = forwardRef(({ onClick, ...rest }, ref) => (
   <div className='custom-control custom-checkbox'>
@@ -42,8 +42,7 @@ const DataTableWithButtons = () => {
   const [filteredData, setFilteredData] = useState([])
   const [data, setData] = useState()
   const [isLoading, setLoading] = useState(false)
-
-  const handleLoad = () => {useEffect()}
+  const [addRecord, setAddRecord] = useState(false)
 
   useEffect(() => {
     loadData();
@@ -63,20 +62,23 @@ const DataTableWithButtons = () => {
     })
       .then(response => response.json())
       .then(associateData => {
+        console.log(associateData)
         setData(associateData)
         setLoading(false)
       })
+
   }
 
   const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
   
   const status = { ///this could be connectionDegree
-    1: { title: 'Current', color: 'light-primary' },
-    2: { title: 'Professional', color: 'light-success' },
-    3: { title: 'Rejected', color: 'light-danger' },
-    4: { title: 'Resigned', color: 'light-warning' },
-    5: { title: 'Applied', color: 'light-info' }
+    1: { title: 'Applied', color: 'light-info' },
+    2: { title: 'Interview', color: 'light-secondary' },
+    3: { title: 'Technical', color: 'light-warning' },
+    4: { title: 'Rejected', color: 'light-danger' },
+    5: { title: 'Offer', color: 'light-success' }
   }
+
 
   const columns = [
     {
@@ -106,22 +108,15 @@ const DataTableWithButtons = () => {
     },
     {
       name: 'Date Applied',
-      selector: 'start_date',
+      selector: 'dateApplied',
       sortable: true,
       minWidth: '100px'
     },
-
     {
       name: 'Salary',
       selector: 'salary',
       sortable: true,
       minWidth: '150px'
-    },
-    {
-      name: 'Age',
-      selector: 'age',
-      sortable: true,
-      minWidth: '100px'
     },
     {
       name: 'Status',
@@ -130,8 +125,21 @@ const DataTableWithButtons = () => {
       minWidth: '150px',
       cell: row => {
         return (
-          <Badge color={status[Math.floor(Math.random() * 5) + 1].color} pill>
-            {status[Math.floor(Math.random() * 5) + 1].title}
+          <Badge color={
+              row.applications[0].status === 'Applied' ? status[1].color :
+                row.applications[0].status === 'Interview' ? status[2].color :
+                  row.applications[0].status === 'Technical' ? status[3].color :
+                    row.applications[0].status === 'Rejected' ? status[4].color :
+                      row.applications[0].status === 'Offer' ? status[5].color :
+                        null
+                      } pill>
+            {
+              row.applications[0].status === 'Applied' ? status[1].title :
+              row.applications[0].status === 'Interview' ? status[2].title :
+                row.applications[0].status === 'Technical' ? status[3].title :
+                  row.applications[0].status === 'Rejected' ? status[4].title :
+                    row.applications[0].status === 'Offer' ? status[5].title : null
+            }
           </Badge>
         )
       }
@@ -148,12 +156,8 @@ const DataTableWithButtons = () => {
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                  <FileText size={15} />
-                  <span className='align-middle ml-50'>Details</span>
-                </DropdownItem>
-                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                  <Archive size={15} />
-                  <span className='align-middle ml-50'>Archive</span>
+                  <UploadCloud size={15} />
+                  <span className='align-middle ml-50'>Update</span>
                 </DropdownItem>
                 <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
                   <Trash size={15} />
@@ -169,7 +173,12 @@ const DataTableWithButtons = () => {
   ]
 
    // ** Function to handle Modal toggle
-   const handleModal = () => setModal(!modal)
+  const handleModal = () => setModal(!modal)
+  // ** Function to handle re-render after new record is added
+  const handleAddRecord = () => setData()
+  
+  const handleLoad = () => loadData()
+ 
 
    // ** Function to handle filter
    const handleFilter = e => {
@@ -184,21 +193,17 @@ const DataTableWithButtons = () => {
        updatedData = data.filter(item => {
          const startsWith =
            item.jobTitle.toLowerCase().startsWith(value.toLowerCase()) ||
-           item.companyName.toLowerCase().startsWith(value.toLowerCase())
-           // item.description.toLowerCase().startsWith(value.toLowerCase())
-           // item.age.toLowerCase().startsWith(value.toLowerCase()) ||
-           // item.salary.toLowerCase().startsWith(value.toLowerCase()) ||
-           // item.start_date.toLowerCase().startsWith(value.toLowerCase()) ||
-           // status[item.status].title.toLowerCase().startsWith(value.toLowerCase())
+           item.companyName.toLowerCase().startsWith(value.toLowerCase()) ||
+           item.description.toLowerCase().startsWith(value.toLowerCase()) ||
+           item.applications[0].status.toLowerCase().startsWith(value.toLowerCase())
+
  
          const includes =
            item.jobTitle.toLowerCase().includes(value.toLowerCase()) ||
-           item.companyName.toLowerCase().includes(value.toLowerCase())
-           // item.description.toLowerCase().includes(value.toLowerCase())
-           // item.age.toLowerCase().includes(value.toLowerCase()) ||
-           // item.salary.toLowerCase().includes(value.toLowerCase()) ||
-           // item.start_date.toLowerCase().includes(value.toLowerCase()) ||
-           // status[item.status].title.toLowerCase().includes(value.toLowerCase())
+           item.companyName.toLowerCase().includes(value.toLowerCase()) ||
+           item.description.toLowerCase().includes(value.toLowerCase()) ||
+           item.applications[0].status.toLowerCase().includes(value.toLowerCase())
+           
  
          if (startsWith) {
            return startsWith
@@ -253,9 +258,7 @@ const DataTableWithButtons = () => {
 									className='mr-1'
 									color='primary'
 									type='submit'
-									onClick={(e) =>
-										console.log("form submitted!")
-									}
+									onClick={handleLoad}
 								>
 									{isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Refresh"}
 								</Button.Ripple>
@@ -296,7 +299,8 @@ const DataTableWithButtons = () => {
           selectableRowsComponent={BootstrapCheckbox}
         />
       </Card>
-      <AddNewModal state={loadData} open={modal} handleModal={handleModal}/>
+      <AddNewModal open={modal} handleModal={handleModal} />
+      {/* <CreateApplication handleAddRecord={handleAddRecord}/> */}
     </Fragment>
   )
 }
