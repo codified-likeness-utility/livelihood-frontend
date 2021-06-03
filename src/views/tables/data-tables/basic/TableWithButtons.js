@@ -3,6 +3,7 @@ import { Fragment, useState, useEffect, forwardRef } from 'react'
 import moment from 'moment';
 import Avatar from '@components/avatar'
 import AddNewModal from './AddNewModal'
+import FormModal from './FormModal';
 import { ThemeColors } from '../../../../utility/context/ThemeColors'
 import ReactPaginate from 'react-paginate'
 import DataTable from 'react-data-table-component'
@@ -23,19 +24,19 @@ import {
   Col,
   UncontrolledDropdown,
   Badge,
-  Spinner
+  Spinner,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Form,
+  FormGroup
 } from 'reactstrap'
 
-// ** Bootstrap Checkbox Component
-const BootstrapCheckbox = forwardRef(({ onClick, ...rest }, ref) => (
-  <div className='custom-control custom-checkbox'>
-    <input type='checkbox' className='custom-control-input' ref={ref} {...rest} />
-    <label className='custom-control-label' onClick={onClick} />
-  </div>
-))
 
 const DataTableWithButtons = () => {
   // ** States
+  const [formModal, setFormModal] = useState(false)
   const [modal, setModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
   const [searchValue, setSearchValue] = useState('')
@@ -43,12 +44,13 @@ const DataTableWithButtons = () => {
   const [data, setData] = useState()
   const [isLoading, setLoading] = useState(false)
   const [addRecord, setAddRecord] = useState(false)
+  const [jobData, setJobData] = useState()
 
   useEffect(() => {
     loadData();
   }, [])
 
-// ** Get initial Data
+// ** Get initial Data from Rails Server
   const loadData = async () => {
     setLoading(true)
     console.log("Loading...")
@@ -71,7 +73,8 @@ const DataTableWithButtons = () => {
 
   const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
   
-  const status = { ///this could be connectionDegree
+  // ** Status Badges for connections
+  const status = {
     1: { title: 'Applied', color: 'light-info' },
     2: { title: 'Interview', color: 'light-secondary' },
     3: { title: 'Technical', color: 'light-warning' },
@@ -79,10 +82,10 @@ const DataTableWithButtons = () => {
     5: { title: 'Offer', color: 'light-success' }
   }
 
-
+  // ** Columns in Table
   const columns = [
     {
-      name: 'Title',
+      name: 'Job Title',
       selector: 'jobTitle',
       sortable: true,
       minWidth: '300px',
@@ -148,6 +151,7 @@ const DataTableWithButtons = () => {
       name: 'Actions',
       allowOverflow: true,
       cell: row => {
+        const jobClicked = row
         return (
           <div className='d-flex'>
             <UncontrolledDropdown>
@@ -155,11 +159,15 @@ const DataTableWithButtons = () => {
                 <MoreVertical size={15} />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                <DropdownItem className='w-100' onClick={() => {
+                  console.log(jobClicked)
+                  handleJobData(jobClicked)
+                  handleFormModal()
+                }}>
                   <UploadCloud size={15} />
                   <span className='align-middle ml-50'>Update</span>
                 </DropdownItem>
-                <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                <DropdownItem className='w-100' onClick={e => e.preventDefault()}>
                   <Trash size={15} />
                   <span className='align-middle ml-50'>Delete</span>
                 </DropdownItem>
@@ -174,11 +182,13 @@ const DataTableWithButtons = () => {
 
    // ** Function to handle Modal toggle
   const handleModal = () => setModal(!modal)
+
   // ** Function to handle re-render after new record is added
-  const handleAddRecord = () => setData()
+  const handleFormModal = () => setFormModal(!formModal)
+  
+  const handleJobData = jobClicked => setJobData(jobClicked)
   
   const handleLoad = () => loadData()
- 
 
    // ** Function to handle filter
    const handleFilter = e => {
@@ -247,6 +257,31 @@ const DataTableWithButtons = () => {
     />
   )
 
+  const ExpandableTable = ({ data }) => {
+    return (
+      <div className='expandable-content p-2'>
+        <p>
+          <span className='font-weight-bold'>Company:</span> {data.companyName}
+        </p>
+        <p>
+          <span className='font-weight-bold'>Job Title:</span> {data.jobTitle}
+        </p>
+        <p>
+          <span className='font-weight-bold'>Salary Offered:</span> {data.salary}
+        </p>
+        <p>
+          <span className='font-weight-bold'>Job Post URL: </span><a href={data.jobPostUrl}> {data.jobPostUrl}</a>
+        </p>
+        <p>
+          <span className='font-weight-bold'>Status of Application:</span> {data.applications[0].status}
+        </p>
+        <p className='m-0'>
+          <span className='font-weight-bold'>Notes:</span> {data.description}
+        </p>
+      </div>
+    )
+  }
+
   return (
     <Fragment>
       <Card>
@@ -288,19 +323,22 @@ const DataTableWithButtons = () => {
         <DataTable
           noHeader
           pagination
-          selectableRows
+          expandableRows
           columns={columns}
           paginationPerPage={7}
           className='react-dataTable'
           sortIcon={<ChevronDown size={10} />}
           paginationDefaultPage={currentPage + 1}
+          expandableRowsComponent={<ExpandableTable />}
           paginationComponent={CustomPagination}
           data={searchValue.length ? filteredData : data}
-          selectableRowsComponent={BootstrapCheckbox}
+          
         />
       </Card>
+      <FormModal job={jobData} open={formModal} handleFormModal={handleFormModal}/>
       <AddNewModal open={modal} handleModal={handleModal} />
       {/* <CreateApplication handleAddRecord={handleAddRecord}/> */}
+        
     </Fragment>
   )
 }

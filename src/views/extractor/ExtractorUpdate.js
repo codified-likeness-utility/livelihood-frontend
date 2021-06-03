@@ -11,7 +11,7 @@ const ExtractorUpdate = result => {
 				"authorization": `Bearer ${localStorage.token}`,
             },
             body: JSON.stringify({
-                fullName: res.fullName.replace(/\W/g, ''),
+                fullName: res.fullName,
                 firstName: res.firstName.replace(/\W/g, ''),
                 lastName: res.lastName.replace(/\W/g, ''),
                 title: res.title.replace(/\W/g, ''),

@@ -6,6 +6,7 @@ import { ChevronDown, MoreVertical, FileText, Archive, Trash, Edit, UploadCloud 
 import DataTable from 'react-data-table-component'
 import { Button, Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import ExtractionModal from './ExtractionModal'
+import ConnectionExtractor from '../../../extractor/ConnectionExtractor'
 
 const DataTableWithButtons = () => {
 
@@ -209,7 +210,8 @@ const DataTableWithButtons = () => {
         paginationRowsPerPageOptions={[10, 25, 50, 100]}
         paginationComponent={CustomPagination}
       />
-      <ExtractionModal open={modal} handleModal={handleModal}/>
+      <ExtractionModal  open={modal} handleModal={handleModal} />
+      {/* <ConnectionExtractor loading={setLoading}/> */}
     </Card>
   )
 }

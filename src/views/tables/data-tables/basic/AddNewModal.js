@@ -47,8 +47,7 @@ const AddNewModal = ({ handleData, open, handleModal }) => {
 
   const onSubmit = (data) => {
 		console.log(dateApplied)
-	  CreateJob(data);
-	//   handleData(data)
+	  	CreateJob(data);
 	};
 
 	const handleJobTitleChange = (e) => {
@@ -278,7 +277,7 @@ const AddNewModal = ({ handleData, open, handleModal }) => {
 					</FormGroup>
 
 					<FormGroup className='mb-4'>
-						<Label for='description'>Description</Label>
+						<Label for='description'>Notes</Label>
 						<InputGroup>
 							<InputGroupAddon addonType='prepend'>
 								<InputGroupText>
@@ -290,7 +289,7 @@ const AddNewModal = ({ handleData, open, handleModal }) => {
 								value={description}
 								name='description'
                 				id='description'
-               					placeholder='Short description of the job from job post page'
+               					placeholder='Place any notes you want to keep about the job here.'
                 				onChange={handleDescriptionChange}
 								className={classnames({
 										"is-invalid": errors["description"],
