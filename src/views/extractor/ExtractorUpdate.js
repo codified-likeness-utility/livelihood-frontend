@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 const ExtractorUpdate = result => {
     result.map(res => {
-        debugger
         fetch('http://localhost:3000/api/v1/extractor', {
             method: 'POST',
             headers: {

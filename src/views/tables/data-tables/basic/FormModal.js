@@ -15,7 +15,7 @@ import {
 
 const FormModal = ({ job, open, handleFormModal }) => {
 
-	const { register, errors, handleSubmit } = useForm();
+	const { register, errors, handleSubmit, reset } = useForm();
 	const [formModal, setFormModal] = useState(false);
 	const [status, setStatus] = useState("");
 	const [salary, setSalary] = useState("");
@@ -23,9 +23,9 @@ const FormModal = ({ job, open, handleFormModal }) => {
     const [jobData, setJobData] = useState()
 
 
-    const onSubmit = (data) => {
+    const onSubmit = (data, e) => {
         console.log(job.id)
-        console.log(data)
+		console.log(data)
         fetch(`http://localhost:3000/api/v1/jobs/${job.id}`, {
             method: 'PATCH',
             headers: {
@@ -43,7 +43,8 @@ const FormModal = ({ job, open, handleFormModal }) => {
             .then(jobUpdate => {
                 console.log(jobUpdate)
                 console.log(data)
-            })
+			})
+		e.target.reset()
 	};
 
 	const handleSalaryChange = (e) => {
@@ -79,7 +80,7 @@ const FormModal = ({ job, open, handleFormModal }) => {
                             className={classnames({
                                 "is-invalid": errors["status"],
                             })}
-                            innerRef={register({
+                            innerRef={register({ // Applying Validation Rules
                                 required: true,
                                 validate: (value) => value !== "",
                             })}

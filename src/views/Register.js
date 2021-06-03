@@ -40,16 +40,7 @@ const Register = () => {
   const illustration = skin === 'dark' ? 'register-v2-dark.svg' : 'register-test-large.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
 
-  const Terms = () => {
-    return (
-      <Fragment>
-        I agree to
-        <a className='ml-25' href='/' onClick={e => e.preventDefault()}>
-          privacy policy & terms
-        </a>
-      </Fragment>
-    )
-  }
+
 
   const onSubmit = data => {
     fetch('http://localhost:3000/api/v1/users', {

@@ -50,10 +50,10 @@ const Home = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Kick start your project 🚀</CardTitle>
+          <CardTitle>New Features Coming Soon! 🚀</CardTitle>
         </CardHeader>
         <CardBody>
-          <CardText>All the best for your new project.</CardText>
+          <CardText>Stay tuned for Automation scheduling, Automated Job applications and much more!</CardText>
         </CardBody>
       </Card>
 
