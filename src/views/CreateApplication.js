@@ -1,5 +1,5 @@
 
-const CreateApplication = newJobData => {
+const CreateApplication = (newJobData) => {
     console.log(newJobData)
     console.log('Data posting to server...')
     fetch('http://localhost:3000/api/v1/applications', {

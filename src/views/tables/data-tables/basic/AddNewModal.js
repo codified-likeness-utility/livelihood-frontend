@@ -30,7 +30,7 @@ import {
 } from "reactstrap";
 import "@styles/react/libs/flatpickr/flatpickr.scss";
 
-const AddNewModal = ({ state, open, handleModal }) => {
+const AddNewModal = ({ handleData, open, handleModal }) => {
 	const { register, errors, handleSubmit, trigger, reset } = useForm();
 	const [valErrors, setValErrors] = useState({});
 	const [dateApplied, setDateApplied] = useState("");
@@ -46,8 +46,8 @@ const AddNewModal = ({ state, open, handleModal }) => {
 	);
 
   const onSubmit = (data) => {
-    console.log(dateApplied)
-    CreateJob(data);
+		console.log(dateApplied)
+	  	CreateJob(data);
 	};
 
 	const handleJobTitleChange = (e) => {
@@ -277,7 +277,7 @@ const AddNewModal = ({ state, open, handleModal }) => {
 					</FormGroup>
 
 					<FormGroup className='mb-4'>
-						<Label for='description'>Description</Label>
+						<Label for='description'>Notes</Label>
 						<InputGroup>
 							<InputGroupAddon addonType='prepend'>
 								<InputGroupText>
@@ -289,7 +289,7 @@ const AddNewModal = ({ state, open, handleModal }) => {
 								value={description}
 								name='description'
                 				id='description'
-               					placeholder='Short description of the job from job post page'
+               					placeholder='Place any notes you want to keep about the job here.'
                 				onChange={handleDescriptionChange}
 								className={classnames({
 										"is-invalid": errors["description"],
@@ -321,6 +321,7 @@ const AddNewModal = ({ state, open, handleModal }) => {
 					</Button>
 				</Form>
 			</ModalBody>
+			{/* <CreateJob handleData={handleData}/> */}
 		</Modal>
 	);
 };
