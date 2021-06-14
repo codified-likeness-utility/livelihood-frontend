@@ -2,7 +2,6 @@ import { useState, useContext, Fragment } from 'react'
 import classnames from 'classnames'
 import Avatar from '@components/avatar'
 import { useSkin } from '@hooks/useSkin'
-import useJwt from '@src/auth/jwt/useJwt'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { toast, Slide } from 'react-toastify'
@@ -36,11 +35,11 @@ const ToastContent = ({username}) => (
     <div className='toastify-header'>
       <div className='title-wrapper'>
         <Avatar size='sm' color='success' icon={<Coffee size={12} />} />
-        <h6 className='toast-title font-weight-bold'>Welcome, {username}</h6>
+        <h4 className='toast-title font-weight-bold'>Welcome back, {username}</h4>
       </div>
     </div>
     <div className='toastify-body'>
-      <span>You have successfully logged in!. Now you can start to explore. Enjoy!</span>
+      <h6>You have successfully logged in!. Happy Job Hunting!!</h6>
     </div>
   </Fragment>
 )
@@ -81,7 +80,7 @@ const Login = props => {
           localStorage.setItem('userData', JSON.stringify(returningUser))
           toast.success(
             <ToastContent username={data.username} />,
-            { transition: Slide, hideProgressBar: true, autoClose: 5000 }
+            { transition: Slide, hideProgressBar: true, autoClose: 7000 }
           )
         }
       })
@@ -156,23 +155,6 @@ const Login = props => {
                 <span>Create an account</span>
               </Link>
             </p>
-            {/* <div className='divider my-2'>
-              <div className='divider-text'>or</div>
-            </div>
-            <div className='auth-footer-btn d-flex justify-content-center'>
-              <Button.Ripple color='facebook'>
-                <Facebook size={14} />
-              </Button.Ripple>
-              <Button.Ripple color='twitter'>
-                <Twitter size={14} />
-              </Button.Ripple>
-              <Button.Ripple color='google'>
-                <Mail size={14} />
-              </Button.Ripple>
-              <Button.Ripple className='mr-0' color='github'>
-                <GitHub size={14} />
-              </Button.Ripple>
-            </div> */}
           </Col>
         </Col>
       </Row>

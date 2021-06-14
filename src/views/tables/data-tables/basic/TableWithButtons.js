@@ -1,20 +1,15 @@
 
 import { Fragment, useState, useEffect, forwardRef } from 'react'
-import moment from 'moment';
-import Avatar from '@components/avatar'
 import AddNewModal from './AddNewModal'
 import FormModal from './FormModal';
-import { ThemeColors } from '../../../../utility/context/ThemeColors'
 import ReactPaginate from 'react-paginate'
 import DataTable from 'react-data-table-component'
-import CreateApplication from '@src/views/CreateApplication'
-import { ChevronDown, Share, Printer, FileText, File, Grid, Copy, Plus, MoreVertical, Archive, Trash, Edit, UploadCloud } from 'react-feather'
+import { ChevronDown,Plus, MoreVertical, Trash, Edit, UploadCloud } from 'react-feather'
 import {
   Card,
   CardHeader,
   CardTitle,
   Button,
-  UncontrolledButtonDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
@@ -24,13 +19,7 @@ import {
   Col,
   UncontrolledDropdown,
   Badge,
-  Spinner,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Form,
-  FormGroup
+  Spinner
 } from 'reactstrap'
 
 
@@ -91,11 +80,6 @@ const DataTableWithButtons = () => {
       minWidth: '300px',
       cell: row => (
         <div className='d-flex align-items-center'>
-          {/* {row.avatar === '' ? (
-            <Avatar color={`light-${states[row.status]}`} content={row.full_name} initials />
-          ) : (
-            <Avatar img={require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`).default} />
-          )} */}
           <div className='user-info text-truncate ml-1'>
             <span className='d-block font-weight-bold text-truncate'>{row.jobTitle}</span>
             <small>{row.post}</small>
@@ -123,7 +107,7 @@ const DataTableWithButtons = () => {
     },
     {
       name: 'Status',
-      selector: 'status',
+      selector: 'applications[0].status',
       sortable: true,
       minWidth: '150px',
       cell: row => {
@@ -190,15 +174,12 @@ const DataTableWithButtons = () => {
   
   const handleLoad = () => loadData()
 
-   // ** Function to handle filter
+   // ** Function to handle filtering data values
    const handleFilter = e => {
      const value = e.target.value
      let updatedData = []
      setSearchValue(value)
-    //  const cleanData = data.filter(item => {
-    //   return item !== undefined && item !== null
-    // })
-    //  debugger
+  
      if (value.length) {
        updatedData = data.filter(item => {
          const startsWith =
@@ -226,10 +207,10 @@ const DataTableWithButtons = () => {
      }
    }
  
-   // ** Function to handle Pagination
-   const handlePagination = page => {
-     setCurrentPage(page.selected)
-   }
+  // ** Function to handle Pagination
+  const handlePagination = page => {
+    setCurrentPage(page.selected)
+  }
   
   // ** Custom Pagination
   const CustomPagination = () => (
@@ -256,7 +237,7 @@ const DataTableWithButtons = () => {
       containerClassName='pagination react-paginate separated-pagination pagination-sm justify-content-end pr-1 mt-1'
     />
   )
-
+    // ** Expandable Row Structure
   const ExpandableTable = ({ data }) => {
     return (
       <div className='expandable-content p-2'>
@@ -337,8 +318,6 @@ const DataTableWithButtons = () => {
       </Card>
       <FormModal job={jobData} open={formModal} handleFormModal={handleFormModal}/>
       <AddNewModal open={modal} handleModal={handleModal} />
-      {/* <CreateApplication handleAddRecord={handleAddRecord}/> */}
-        
     </Fragment>
   )
 }

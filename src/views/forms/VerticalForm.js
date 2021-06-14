@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import classnames from "classnames";
 import CreateAssociate from '../CreateAssociate'
-import LoadingSpinnerButton from '../../views/components/LoadingSpinnerButton'
 import {
 	Card,
 	CardHeader,
 	CardTitle,
 	CardBody,
-	CardSubtitle,
 	FormGroup,
 	Row,
 	Col,
@@ -16,7 +14,6 @@ import {
 	Form,
 	Button,
 	Label,
-	CustomInput,
 	Popover,
 	PopoverHeader,
 	PopoverBody,
@@ -33,6 +30,7 @@ const VerticalForm = () => {
 	const [popoverOpen, setPopoverOpen] = useState(false);
 	const [isLoading, setLoading] = useState(false)
 
+// ** API POST Request to get Data
 	const onSubmit = (data) => {
 		setLoading(true)
 		const apiKey = process.env.REACT_APP_GH_API_KEY
@@ -60,6 +58,8 @@ const VerticalForm = () => {
 			}),
 			redirect: "follow",
 		};
+
+		console.log(requestOptions)
 
 		fetch("https://api.growth-hacking.io/linkedin/search-connect", requestOptions)
 			.then(response => response.json())

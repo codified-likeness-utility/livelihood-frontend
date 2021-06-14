@@ -4,11 +4,10 @@ import Avatar from '@components/avatar'
 import ReactPaginate from 'react-paginate'
 import { ChevronDown, MoreVertical, FileText, Archive, Trash, Edit, UploadCloud  } from 'react-feather'
 import DataTable from 'react-data-table-component'
-import { Button, Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import { Button, Card, CardHeader, CardTitle, Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Spinner } from 'reactstrap'
 import ExtractionModal from './ExtractionModal'
-import ConnectionExtractor from '../../../extractor/ConnectionExtractor'
 
-const DataTableWithButtons = () => {
+const ApplicationsTracker = () => {
 
   const [modal, setModal] = useState(false)
   const [isLoading, setLoading] = useState(false)
@@ -21,6 +20,7 @@ const DataTableWithButtons = () => {
 
 // ** Get initial Data
   const loadData = async () => {
+    setLoading(true)
     fetch('http://localhost:3000/api/v1/associates', {
       method: 'GET',
       headers: {
@@ -33,9 +33,11 @@ const DataTableWithButtons = () => {
       .then(associateData => {
         console.log(associateData)
         setData(associateData)
+        setLoading(false)
       })
   }
-  
+
+// ** Expandable Table Structure
   const ExpandableTable = ({ data }) => {
     return (
       <div className='expandable-content p-2'>
@@ -54,21 +56,28 @@ const DataTableWithButtons = () => {
         <p>
           <span className='font-weight-bold'>Connection Degree:</span> {data.connectionDegree}
         </p>
-        <p className='m-0'>
+        <p >
           <span className='font-weight-bold'>Last Message Sent:</span> {data.lastMessageSent}
         </p>
+        <div className='d-flex'>
+          <Button className='ml-2' color='primary' onClick='...'>
+              <span className='align-middle ml-50'>Scrape LinkedIn Profile</span>
+          </Button>
+        </div>
       </div>
     )
   }
 
   const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
 
-    const status = {
-      1: { title: 'Connected', color: 'light-success' },
-      2: { title: 'Pending', color: 'light-warning' },
-      3: { title: 'Pending', color: 'light-warning' }
-    }
+// ** Status badge colors
+  const status = {
+    1: { title: 'Connected', color: 'light-success' },
+    2: { title: 'Pending', color: 'light-warning' },
+    3: { title: 'Pending', color: 'light-warning' }
+  }
 
+// ** Table Column Structure
   const columns = [
     {
       name: 'Name',
@@ -90,12 +99,6 @@ const DataTableWithButtons = () => {
         </div>
       )
     },
-    // {
-    //   name: 'Company',
-    //   selector: 'company',
-    //   sortable: true,
-    //   minWidth: '200px'
-    // },
     {
       name: 'Title',
       selector: 'title',
@@ -103,12 +106,6 @@ const DataTableWithButtons = () => {
       minWidth: '150px',
       maxWidth: '600px'
     },
-    // {
-    //   name: 'Connection Degree',
-    //   selector: 'connectionDegree',
-    //   sortable: true,
-    //   minWidth: '50px'
-    // },
     {
       name: 'Status',
       selector: 'connectionDegree',
@@ -163,7 +160,7 @@ const DataTableWithButtons = () => {
       nextLabel={''}
       forcePage={currentPage}
       onPageChange={page => handlePagination(page)}
-      pageCount={data.length / 7 || 1}
+      pageCount={data.length / 10 || 1}
       breakLabel={'...'}
       pageRangeDisplayed={2}
       marginPagesDisplayed={2}
@@ -182,19 +179,30 @@ const DataTableWithButtons = () => {
 
   const handleModal = () => setModal(!modal)
 
+  const handleLoad = () => loadData()
+
   return (
     <Card>
       <CardHeader>
         <CardTitle tag='h4'>LinkedIn Connections</CardTitle>
-        <Button.Ripple
-          className='mr-1'
-          color='primary'
-          type='submit'
-          onClick={handleModal}
-				>
-          {isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Extract New Connections"}
-				</Button.Ripple>
-
+        <div className='d-flex mt-md-0 mt-1'>
+          <Button.Ripple
+            className='mr-1'
+            color='primary'
+            type='submit'
+            onClick={handleLoad}
+          >
+            {isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Refresh"}
+          </Button.Ripple>
+          <Button.Ripple
+            className='ml-2'
+            color='primary'
+            type='submit'
+            onClick={handleModal}
+          >
+            {isLoading ? <><Spinner color='white' size='sm' /><span className='ml-50'>Loading...</span></> : "Extract New Connections"}
+          </Button.Ripple>
+        </div>
       </CardHeader>
       <DataTable
         noHeader
@@ -211,9 +219,8 @@ const DataTableWithButtons = () => {
         paginationComponent={CustomPagination}
       />
       <ExtractionModal  open={modal} handleModal={handleModal} />
-      {/* <ConnectionExtractor loading={setLoading}/> */}
     </Card>
   )
 }
 
-export default DataTableWithButtons
+export default ApplicationsTracker
