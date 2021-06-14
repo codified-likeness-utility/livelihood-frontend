@@ -9,7 +9,7 @@ This application uses a third-party API that opens an instance of Google Puppete
 https://youtu.be/1Lr0CDATEHo
 
 
-### MVP ###
+## MVP for Flatiron School Final Project
 
 1. User can create an account by logging in through LinkedIn
 2. Create a search query for people you would like to connect with on LinkedIn (i.e. - Hiring Managers, Recruiters, Senior Developrs, etc.)
