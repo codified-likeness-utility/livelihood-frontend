@@ -3,6 +3,8 @@ Livelihood is a React application that connects with an API that uses Google Pup
 
 https://youtu.be/1Lr0CDATEHo
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/1Lr0CDATEHo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### MVP ###
 
 1. User can create an account by logging in through LinkedIn
