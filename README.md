@@ -1,9 +1,13 @@
 ## Livelihood
-Livelihood is a React application that connects with an API that uses Google Puppeteer to collect data from LinkedIn that allows you to create new connections with recruiters and hiring managers so that you have a better chance of landing a new job.  It also allows you to track and update all of your job applications and new LinkedIn Connections.
+
+Livelihood is an Automated Networking and Job Application Tracker built specifically for new software engineering bootcamp graduates in mind!
+
+This application uses a third-party API that opens an instance of Google Puppeteer ( a headless Chrome Browser ) in AWS and then logs into LinkedIn with the users infromation.  Once logged in to a user's account, Livelihood can send automated and personalized connection requests to LinkedIn members based on the criteria that you set in the application.  Each user can also keep track of the job applications, interview and connections through the application and get a nice dashobard view of statistics that display just how effective their networking and job application efforts are!
+
+## Demonstration Video
 
 https://youtu.be/1Lr0CDATEHo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/1Lr0CDATEHo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### MVP ###
 
