@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import classnames from 'classnames'
 import Avatar from '@components/avatar'
-import { TrendingUp, User, Box, DollarSign } from 'react-feather'
-import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col, Media } from 'reactstrap'
+import { TrendingUp, User, Box, DollarSign, Users, UserPlus, FileText, Video, Terminal } from 'react-feather'
+import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col, Media  } from 'reactstrap'
 
 const StatsCard = ({ cols }) => {
 
@@ -48,6 +48,7 @@ const StatsCard = ({ cols }) => {
   //** Statistics Logic */
   const allConnections = data.length
   const firstDegreeConnections = data.filter(assoc => assoc.connectionDegree === "1st").length
+  const pendingConnections = data.filter(assoc => assoc.connectionDegree === "2nd" || assoc.connectionDegree === "3rd").length
   const appTotal = appData.filter(app => app.status === "Intervew" || app.status === "Technical").length
   const offerTotal = appData.filter(app => app.status === "Offer").length
 
@@ -56,19 +57,31 @@ const StatsCard = ({ cols }) => {
       title: firstDegreeConnections,
       subtitle: 'New Connections',
       color: 'light-primary',
-      icon: <TrendingUp size={24} />
+      icon: <UserPlus size={24} />
+    },
+    {
+      title: pendingConnections,
+      subtitle: 'Pending Connections',
+      color: 'light-warning',
+      icon: <Users size={24} />
     },
     {
       title: appData.length,
       subtitle: 'Job Applications',
       color: 'light-info',
-      icon: <User size={24} />
+      icon: <FileText size={24} />
     },
     {
       title: appTotal,
       subtitle: 'Interviews',
       color: 'light-danger',
-      icon: <Box size={24} />
+      icon: <Video size={24} />
+    },
+    {
+      title: appTotal,
+      subtitle: 'Technical Interviews',
+      color: 'light-secondary',
+      icon: <Terminal size={24} />
     },
     {
       title: offerTotal,

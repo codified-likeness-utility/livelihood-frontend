@@ -59,6 +59,8 @@ const VerticalForm = () => {
 			redirect: "follow",
 		};
 
+		console.log(requestOptions)
+
 		fetch("https://api.growth-hacking.io/linkedin/search-connect", requestOptions)
 			.then(response => response.json())
 			.then(result => {
