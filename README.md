@@ -6,7 +6,7 @@ This application uses a third-party API that opens an instance of Google Puppete
 
 ## Demonstration Video
 
-See a full demo of Livelihood on my Youtube Channel 👉 https://youtu.be/1Lr0CDATEHo 👈
+See a full demo of Livelihood on my Youtube Channel 🚀🚀👉 https://youtu.be/1Lr0CDATEHo 👈🚀🚀
 
 ### Screenshot of User Dashboard
 ![image](https://user-images.githubusercontent.com/71902770/121950213-f3ec6180-cd1e-11eb-97ea-8695d70838a5.png)
