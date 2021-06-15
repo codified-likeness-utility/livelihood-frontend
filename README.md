@@ -4,12 +4,10 @@ Livelihood is an Automated Networking and Job Application Tracker built specific
 
 This application uses a third-party API that opens an instance of Google Puppeteer ( a headless Chrome Browser ) in AWS and then logs into LinkedIn with the users infromation.  Once logged in to a user's account, Livelihood can send automated and personalized connection requests to LinkedIn members based on the criteria that you set in the application.  Each user can also keep track of the job applications, interview and connections through the application and get a nice dashobard view of statistics that display just how effective their networking and job application efforts are!
 
-![image](https://user-images.githubusercontent.com/71902770/121950213-f3ec6180-cd1e-11eb-97ea-8695d70838a5.png)
-
 ## Demonstration Video
 
 https://youtu.be/1Lr0CDATEHo
-
+![image](https://user-images.githubusercontent.com/71902770/121950213-f3ec6180-cd1e-11eb-97ea-8695d70838a5.png)
 
 ## MVP for Flatiron School Final Project
 
