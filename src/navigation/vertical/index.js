@@ -1,4 +1,4 @@
-import { Mail, Home, Zap, Terminal, Activity } from 'react-feather'
+import { Home, Zap, Terminal, Activity } from 'react-feather'
 
 export default [
   {
