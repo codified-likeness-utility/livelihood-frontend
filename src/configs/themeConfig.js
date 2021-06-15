@@ -1,6 +1,4 @@
-// You can customize the template with the help of this file
 
-//Template config options
 const themeConfig = {
   app: {
     appName: 'livelihood',
@@ -9,7 +7,7 @@ const themeConfig = {
   layout: {
     isRTL: false,
     skin: 'light', // light, dark, bordered, semi-dark
-    routerTransition: 'fadeIn', // fadeIn, fadeInLeft, zoomIn, none or check this for more transition https://animate.style/
+    routerTransition: 'fadeIn', // fadeIn, fadeInLeft, zoomIn
     type: 'vertical', // vertical, horizontal
     contentWidth: 'full', // full, boxed
     menu: {
@@ -17,7 +15,7 @@ const themeConfig = {
       isCollapsed: false
     },
     navbar: {
-      // ? For horizontal menu, navbar type will work for navMenu type
+      
       type: 'floating', // static , sticky , floating, hidden
       backgroundColor: 'white' // BS color options [primary, success, etc]
     },

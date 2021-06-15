@@ -1,4 +1,4 @@
-import { Mail, Home } from 'react-feather'
+import { Activity, Home } from 'react-feather'
 
 export default [
   {
@@ -10,7 +10,7 @@ export default [
   {
     id: 'statistics',
     title: 'Statistics',
-    icon: <Mail size={20} />,
+    icon: <Activity size={20} />,
     navLink: '/statistics'
   }
 ]
